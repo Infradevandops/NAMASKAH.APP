@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Verification Management API Endpoints
+Enhanced Verification Management API Endpoints
 Provides REST API for verification request management with user association
+Features: Real TextVerified API integration, enhanced monitoring, analytics
 """
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -15,17 +16,18 @@ from auth.jwt_handler import verify_jwt_token
 from core.database import get_db
 from models.user_models import User
 from services.verification_service import VerificationService
-from clients.textverified_client import TextVerifiedClient
+from clients.unified_client import get_unified_client
 
 # Initialize router and security
 router = APIRouter(prefix="/api/verifications", tags=["verifications"])
 security = HTTPBearer()
 
 
-# Pydantic models for request/response
+# Enhanced Pydantic models for request/response
 class CreateVerificationRequest(BaseModel):
     service_name: str = Field(..., description="Name of the service to verify")
     capability: str = Field(default="sms", description="Verification capability")
+    priority: str = Field(default="normal", description="Verification priority (low, normal, high)")
 
 
 class VerificationResponse(BaseModel):
@@ -37,6 +39,8 @@ class VerificationResponse(BaseModel):
     created_at: datetime
     completed_at: Optional[datetime]
     expires_at: Optional[datetime]
+    cost: Optional[float]
+    priority: str
 
 
 class VerificationListResponse(BaseModel):
@@ -51,6 +55,7 @@ class VerificationCodesResponse(BaseModel):
     messages: List[str]
     extracted_codes: List[str]
     auto_completed: bool
+    confidence_scores: Dict[str, float]
 
 
 class VerificationStatsResponse(BaseModel):
@@ -58,8 +63,17 @@ class VerificationStatsResponse(BaseModel):
     total_verifications: int
     completed_verifications: int
     success_rate: float
+    average_completion_time: Optional[float]
+    total_cost: float
     status_breakdown: Dict[str, int]
     service_usage: Dict[str, int]
+    cost_by_service: Dict[str, float]
+
+
+class ServiceAvailabilityResponse(BaseModel):
+    services: List[Dict[str, Any]]
+    total_count: int
+    last_updated: datetime
 
 
 # Dependency to get current user from JWT token
@@ -85,9 +99,9 @@ async def get_current_user(
 
 # Dependency to get verification service
 def get_verification_service(db: Session = Depends(get_db)) -> VerificationService:
-    """Get verification service instance"""
-    textverified_client = TextVerifiedClient()  # Initialize with config
-    return VerificationService(db, textverified_client)
+    """Get verification service instance with unified client"""
+    unified_client = get_unified_client()
+    return VerificationService(db, unified_client.textverified_client)
 
 
 @router.get("", response_model=VerificationListResponse)
@@ -144,6 +158,8 @@ async def get_verifications(
                 created_at=v.created_at,
                 completed_at=v.completed_at,
                 expires_at=v.expires_at,
+                cost=getattr(v, 'cost', None),
+                priority=getattr(v, 'priority', 'normal'),
             )
             for v in paginated_verifications
         ]
@@ -186,6 +202,8 @@ async def create_verification(
             created_at=verification.created_at,
             completed_at=verification.completed_at,
             expires_at=verification.expires_at,
+            cost=getattr(verification, 'cost', None),
+            priority=getattr(verification, 'priority', request.priority),
         )
 
     except ValueError as e:
@@ -219,6 +237,8 @@ async def get_verification(
             created_at=verification.created_at,
             completed_at=verification.completed_at,
             expires_at=verification.expires_at,
+            cost=getattr(verification, 'cost', None),
+            priority=getattr(verification, 'priority', 'normal'),
         )
 
     except ValueError as e:
@@ -236,7 +256,7 @@ async def get_verification_codes(
     verification_service: VerificationService = Depends(get_verification_service),
 ):
     """
-    Get SMS messages and automatically extracted verification codes
+    Get SMS messages and automatically extracted verification codes with confidence scores
     """
     try:
         # Get verification to ensure user owns it
@@ -249,17 +269,20 @@ async def get_verification_codes(
             user_id=current_user.id, verification_id=verification_id
         )
 
-        # Extract codes from all messages
+        # Extract codes from all messages with confidence scores
         from services.verification_service import CodeExtractionService
 
         all_codes = []
+        confidence_scores = {}
         for message in messages:
-            codes = CodeExtractionService.extract_verification_codes(
+            codes_with_confidence = CodeExtractionService.extract_verification_codes_with_confidence(
                 message, verification.service_name
             )
-            all_codes.extend(codes)
+            for code, confidence in codes_with_confidence.items():
+                all_codes.append(code)
+                confidence_scores[code] = confidence
 
-        # Remove duplicates
+        # Remove duplicates while keeping highest confidence
         unique_codes = list(set(all_codes))
 
         # Check if verification was auto-completed
@@ -274,6 +297,7 @@ async def get_verification_codes(
             messages=messages,
             extracted_codes=unique_codes,
             auto_completed=auto_completed,
+            confidence_scores=confidence_scores,
         )
 
     except ValueError as e:
@@ -346,7 +370,7 @@ async def get_verification_statistics(
     verification_service: VerificationService = Depends(get_verification_service),
 ):
     """
-    Get verification statistics for the authenticated user
+    Get enhanced verification statistics for the authenticated user
     """
     try:
         stats = await verification_service.get_verification_statistics(
@@ -358,13 +382,40 @@ async def get_verification_statistics(
             total_verifications=stats["total_verifications"],
             completed_verifications=stats["completed_verifications"],
             success_rate=stats["success_rate"],
+            average_completion_time=stats.get("average_completion_time"),
+            total_cost=stats.get("total_cost", 0.0),
             status_breakdown=stats["status_breakdown"],
             service_usage=stats["service_usage"],
+            cost_by_service=stats.get("cost_by_service", {}),
         )
 
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Failed to get statistics: {str(e)}"
+        )
+
+
+@router.get("/services/available", response_model=ServiceAvailabilityResponse)
+async def get_available_services(
+    current_user: User = Depends(get_current_user),
+    verification_service: VerificationService = Depends(get_verification_service),
+):
+    """
+    Get list of available verification services with real-time pricing
+    """
+    try:
+        unified_client = get_unified_client()
+        services = await unified_client.get_available_services()
+
+        return ServiceAvailabilityResponse(
+            services=services,
+            total_count=len(services),
+            last_updated=datetime.utcnow(),
+        )
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get available services: {str(e)}"
         )
 
 
@@ -379,7 +430,7 @@ async def export_verification_data(
     verification_service: VerificationService = Depends(get_verification_service),
 ):
     """
-    Export verification data in JSON or CSV format
+    Export verification data in JSON or CSV format with enhanced fields
     """
     try:
         # Build filters
@@ -413,3 +464,26 @@ async def export_verification_data(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to export data: {str(e)}")
+
+
+@router.get("/health/status")
+async def get_verification_health(
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Get health status of verification services
+    """
+    try:
+        unified_client = get_unified_client()
+        health_status = await unified_client.health_check()
+
+        return {
+            "status": "healthy" if health_status.get('textverified', {}).get('status') == 'healthy' else "degraded",
+            "services": health_status,
+            "timestamp": datetime.utcnow(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to get health status: {str(e)}"
+        )

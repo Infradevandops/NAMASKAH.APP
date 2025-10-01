@@ -32,3 +32,4 @@ export { default as SubscriptionPlans } from './SubscriptionPlans';
 export { default as TwoFactorSetup } from './TwoFactorSetup';
 export { default as TypingIndicator } from './TypingIndicator';
 export { default as UsageMetrics } from './UsageMetrics';
+export { default as BillingForecastWidget } from './BillingForecastWidget';

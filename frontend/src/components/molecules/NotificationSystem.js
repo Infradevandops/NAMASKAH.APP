@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '../atoms';
+import NotificationHistory from './NotificationHistory';
 
 const NotificationSystem = ({
   maxNotifications = 5,
@@ -12,6 +13,8 @@ const NotificationSystem = ({
 }) => {
   const [notifications, setNotifications] = useState([]);
   const [soundEnabled, setSoundEnabled] = useState(enableSound);
+  const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState([]);
 
   const notificationTypes = {
     success: {
@@ -135,6 +138,23 @@ const NotificationSystem = ({
     }
   };
 
+  const fetchHistory = async () => {
+    try {
+      const response = await fetch('/api/notifications');
+      const data = await response.json();
+      setHistory(data.notifications);
+    } catch (error) {
+      console.error('Failed to fetch notification history:', error);
+    }
+  };
+
+  const toggleHistory = () => {
+    if (!showHistory) {
+      fetchHistory();
+    }
+    setShowHistory(!showHistory);
+  };
+
   // Expose functions globally for use by other components
   useEffect(() => {
     window.showNotification = addNotification;
@@ -189,166 +209,192 @@ const NotificationSystem = ({
     return timestamp.toLocaleDateString();
   };
 
-  if (notifications.length === 0) return null;
+  const renderHistoryModal = () => {
+    if (!showHistory) return null;
 
-  return (
-    <div 
-      className={`fixed ${positionClasses[position]} z-50 space-y-2 ${className}`}
-      {...props}
-    >
-      {/* Clear All Button */}
-      {notifications.length > 1 && (
-        <div className="flex justify-end mb-2">
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-8 max-w-lg w-full">
+          <NotificationHistory notifications={history} />
           <button
-            onClick={clearAll}
-            className="text-xs text-gray-500 hover:text-gray-700 bg-white rounded-full px-2 py-1 shadow-sm border"
+            onClick={toggleHistory}
+            className="mt-4 text-sm text-blue-600 hover:text-blue-800"
           >
-            Clear All
+            Close
           </button>
         </div>
-      )}
+      </div>
+    );
+  };
 
-      {/* Notifications */}
-      {notifications.map((notification) => {
-        const typeConfig = notificationTypes[notification.type] || notificationTypes.info;
-        
-        return (
-          <div
-            key={notification.id}
-            className={`
-              bg-white border-l-4 border-${typeConfig.color}-500 rounded-lg shadow-lg 
-              max-w-sm w-full p-4 transform transition-all duration-300 ease-in-out
-              hover:shadow-xl animate-slide-in-right
-            `}
-          >
-            <div className="flex items-start space-x-3">
-              {/* Icon */}
-              <div className={`flex-shrink-0 w-6 h-6 rounded-full bg-${typeConfig.color}-100 flex items-center justify-center`}>
-                <Icon 
-                  name={typeConfig.icon} 
-                  size="sm" 
-                  className={`text-${typeConfig.color}-600`}
-                />
-              </div>
+  return (
+    <>
+      <div 
+        className={`fixed ${positionClasses[position]} z-50 space-y-2 ${className}`}
+        {...props}
+      >
+        {/* Clear All Button */}
+        {notifications.length > 1 && (
+          <div className="flex justify-end mb-2">
+            <button
+              onClick={clearAll}
+              className="text-xs text-gray-500 hover:text-gray-700 bg-white rounded-full px-2 py-1 shadow-sm border"
+            >
+              Clear All
+            </button>
+          </div>
+        )}
 
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                {notification.title && (
-                  <h4 className="text-sm font-semibold text-gray-900 mb-1">
-                    {notification.title}
-                  </h4>
-                )}
-                
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  {notification.message}
-                </p>
+        {/* Notifications */}
+        {notifications.map((notification) => {
+          const typeConfig = notificationTypes[notification.type] || notificationTypes.info;
+          
+          return (
+            <div
+              key={notification.id}
+              className={`
+                bg-white border-l-4 border-${typeConfig.color}-500 rounded-lg shadow-lg 
+                max-w-sm w-full p-4 transform transition-all duration-300 ease-in-out
+                hover:shadow-xl animate-slide-in-right
+              `}
+            >
+              <div className="flex items-start space-x-3">
+                {/* Icon */}
+                <div className={`flex-shrink-0 w-6 h-6 rounded-full bg-${typeConfig.color}-100 flex items-center justify-center`}>
+                  <Icon 
+                    name={typeConfig.icon} 
+                    size="sm" 
+                    className={`text-${typeConfig.color}-600`}
+                  />
+                </div>
 
-                {/* Actions */}
-                {notification.actions && notification.actions.length > 0 && (
-                  <div className="flex items-center space-x-2 mt-3">
-                    {notification.actions.map((action, index) => (
-                      <button
-                        key={index}
-                        onClick={() => {
-                          action.handler();
-                          if (action.dismissOnClick !== false) {
-                            removeNotification(notification.id);
-                          }
-                        }}
-                        className={`
-                          text-xs px-3 py-1 rounded-md font-medium transition-colors
-                          ${action.primary 
-                            ? `bg-${typeConfig.color}-600 text-white hover:bg-${typeConfig.color}-700`
-                            : `text-${typeConfig.color}-600 hover:bg-${typeConfig.color}-50`
-                          }
-                        `}
-                      >
-                        {action.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Timestamp */}
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs text-gray-500">
-                    {formatTimeAgo(notification.timestamp)}
-                  </span>
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  {notification.title && (
+                    <h4 className="text-sm font-semibold text-gray-900 mb-1">
+                      {notification.title}
+                    </h4>
+                  )}
                   
-                  {/* Progress bar for timed notifications */}
-                  {!notification.persistent && notification.duration > 0 && (
-                    <div className="w-16 h-1 bg-gray-200 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full bg-${typeConfig.color}-500 rounded-full animate-progress`}
-                        style={{
-                          animation: `progress ${notification.duration}ms linear forwards`
-                        }}
-                      ></div>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {notification.message}
+                  </p>
+
+                  {/* Actions */}
+                  {notification.actions && notification.actions.length > 0 && (
+                    <div className="flex items-center space-x-2 mt-3">
+                      {notification.actions.map((action, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            action.handler();
+                            if (action.dismissOnClick !== false) {
+                              removeNotification(notification.id);
+                            }
+                          }}
+                          className={`
+                            text-xs px-3 py-1 rounded-md font-medium transition-colors
+                            ${action.primary 
+                              ? `bg-${typeConfig.color}-600 text-white hover:bg-${typeConfig.color}-700`
+                              : `text-${typeConfig.color}-600 hover:bg-${typeConfig.color}-50`
+                            }
+                          `}
+                        >
+                          {action.label}
+                        </button>
+                      ))}
                     </div>
                   )}
+
+                  {/* Timestamp */}
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-xs text-gray-500">
+                      {formatTimeAgo(notification.timestamp)}
+                    </span>
+                    
+                    {/* Progress bar for timed notifications */}
+                    {!notification.persistent && notification.duration > 0 && (
+                      <div className="w-16 h-1 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full bg-${typeConfig.color}-500 rounded-full animate-progress`}
+                          style={{
+                            animation: `progress ${notification.duration}ms linear forwards`
+                          }}
+                        ></div>
+                      </div>
+                    )}
+                  </div>
                 </div>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => removeNotification(notification.id)}
+                  className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <Icon name="x" size="sm" />
+                </button>
               </div>
-
-              {/* Close Button */}
-              <button
-                onClick={() => removeNotification(notification.id)}
-                className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <Icon name="x" size="sm" />
-              </button>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
 
-      {/* Sound Toggle */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => setSoundEnabled(!soundEnabled)}
-          className={`
-            p-2 rounded-full transition-colors text-xs
-            ${soundEnabled 
-              ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
-              : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+        {/* Sound Toggle and History Button */}
+        <div className="flex justify-end space-x-2">
+          <button
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className={`
+              p-2 rounded-full transition-colors text-xs
+              ${soundEnabled 
+                ? 'bg-blue-100 text-blue-600 hover:bg-blue-200' 
+                : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+              }
+            `}
+            title={soundEnabled ? 'Disable sounds' : 'Enable sounds'}
+          >
+            <Icon name={soundEnabled ? 'volume-2' : 'volume-x'} size="xs" />
+          </button>
+          <button
+            onClick={toggleHistory}
+            className="p-2 rounded-full transition-colors text-xs bg-gray-100 text-gray-600 hover:bg-gray-200"
+            title="Notification History"
+          >
+            <Icon name="history" size="xs" />
+          </button>
+        </div>
+
+        {/* Custom CSS for animations */}
+        <style jsx>{`
+          @keyframes slide-in-right {
+            from {
+              transform: translateX(100%);
+              opacity: 0;
             }
-          `}
-          title={soundEnabled ? 'Disable sounds' : 'Enable sounds'}
-        >
-          <Icon name={soundEnabled ? 'volume2' : 'volumeX'} size="xs" />
-        </button>
+            to {
+              transform: translateX(0);
+              opacity: 1;
+            }
+          }
+          
+          @keyframes progress {
+            from {
+              width: 100%;
+            }
+            to {
+              width: 0%;
+            }
+          }
+          
+          .animate-slide-in-right {
+            animation: slide-in-right 0.3s ease-out;
+          }
+          
+          .animate-progress {
+            animation: progress linear forwards;
+          }
+        `}</style>
       </div>
-
-      {/* Custom CSS for animations */}
-      <style jsx>{`
-        @keyframes slide-in-right {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        @keyframes progress {
-          from {
-            width: 100%;
-          }
-          to {
-            width: 0%;
-          }
-        }
-        
-        .animate-slide-in-right {
-          animation: slide-in-right 0.3s ease-out;
-        }
-        
-        .animate-progress {
-          animation: progress linear forwards;
-        }
-      `}</style>
-    </div>
+      {renderHistoryModal()}
+    </>
   );
 };
 

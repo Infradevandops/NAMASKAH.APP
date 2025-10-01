@@ -1,4 +1,4 @@
--- Initialize CUMAPP database
+-- Initialize NAMASKAH.APP database
 -- This script runs when the PostgreSQL container starts for the first time
 
 -- Create extensions
@@ -49,12 +49,12 @@ CREATE INDEX IF NOT EXISTS idx_messages_user_id ON messages(user_id);
 CREATE INDEX IF NOT EXISTS idx_messages_created_at ON messages(created_at);
 
 -- Insert a default admin user (optional)
-INSERT INTO users (email, name) 
-VALUES ('admin@cumapp.com', 'Admin User') 
+INSERT INTO users (email, name)
+VALUES ('admin@namaskah.app', 'Admin User')
 ON CONFLICT (email) DO NOTHING;
 
 -- Log initialization
 DO $$
 BEGIN
-    RAISE NOTICE 'CUMAPP database initialized successfully';
+    RAISE NOTICE 'NAMASKAH.APP database initialized successfully';
 END $$;

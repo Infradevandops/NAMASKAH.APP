@@ -172,6 +172,68 @@ class CodeExtractionService:
 
         return result
 
+    @classmethod
+    def extract_verification_codes_with_confidence(
+        cls, message_content: str, service_name: str = None
+    ) -> Dict[str, float]:
+        """
+        Extract verification codes from SMS message content with confidence scores
+
+        Args:
+            message_content: The SMS message content
+            service_name: Optional service name for service-specific patterns
+
+        Returns:
+            Dictionary mapping codes to confidence scores (0.0 to 1.0)
+        """
+        codes_with_confidence = {}
+        message_lower = message_content.lower()
+
+        # Try service-specific patterns first if service is provided
+        if service_name and service_name.lower() in cls.SERVICE_PATTERNS:
+            for pattern in cls.SERVICE_PATTERNS[service_name.lower()]:
+                matches = re.findall(pattern, message_content, re.IGNORECASE)
+                for match in matches:
+                    codes_with_confidence[match] = 0.9  # High confidence for service-specific
+
+        # Try general patterns
+        if not codes_with_confidence:
+            for pattern in cls.CODE_PATTERNS:
+                matches = re.findall(pattern, message_content, re.IGNORECASE)
+                for match in matches:
+                    # Calculate confidence based on pattern specificity
+                    confidence = cls._calculate_pattern_confidence(pattern, match, message_content)
+                    codes_with_confidence[match] = confidence
+
+        # Filter and validate codes
+        validated_codes = {}
+        for code, confidence in codes_with_confidence.items():
+            if cls._is_valid_code(code):
+                validated_codes[code] = confidence
+
+        return validated_codes
+
+    @classmethod
+    def _calculate_pattern_confidence(cls, pattern: str, code: str, message: str) -> float:
+        """Calculate confidence score for a pattern match"""
+        base_confidence = 0.5
+
+        # Increase confidence for longer codes
+        if len(code) >= 6:
+            base_confidence += 0.2
+
+        # Increase confidence if code appears with verification keywords
+        verification_keywords = ['code', 'verification', 'confirm', 'verify', 'otp', 'pin']
+        message_lower = message.lower()
+        if any(keyword in message_lower for keyword in verification_keywords):
+            base_confidence += 0.2
+
+        # Increase confidence for service-specific patterns
+        if 'service' in pattern.lower():
+            base_confidence += 0.1
+
+        return min(base_confidence, 1.0)
+
 
 class VerificationService:
     """Enhanced verification service with user association and tracking"""
@@ -497,14 +559,14 @@ class VerificationService:
         self, user_id: str, period_days: int = 30
     ) -> Dict[str, Any]:
         """
-        Get verification statistics for a user
+        Get enhanced verification statistics for a user
 
         Args:
             user_id: ID of the user
             period_days: Number of days to include in statistics
 
         Returns:
-            Dictionary with statistics
+            Dictionary with enhanced statistics including completion times and costs
         """
         try:
             since_date = datetime.utcnow() - timedelta(days=period_days)
@@ -541,28 +603,59 @@ class VerificationService:
                 .all()
             )
 
+            # Calculate completion times for completed verifications
+            completed_verifications = (
+                self.db.query(VerificationRequest)
+                .filter(
+                    and_(
+                        VerificationRequest.user_id == user_id,
+                        VerificationRequest.created_at >= since_date,
+                        VerificationRequest.status == "completed",
+                        VerificationRequest.completed_at.isnot(None),
+                    )
+                )
+                .all()
+            )
+
+            completion_times = []
+            for verification in completed_verifications:
+                if verification.completed_at and verification.created_at:
+                    time_diff = (verification.completed_at - verification.created_at).total_seconds() / 60  # minutes
+                    completion_times.append(time_diff)
+
+            average_completion_time = (
+                sum(completion_times) / len(completion_times) if completion_times else None
+            )
+
             # Calculate success rate
             total_verifications = sum(count for _, count in status_counts)
-            completed_verifications = next(
+            completed_count = next(
                 (count for status, count in status_counts if status == "completed"), 0
             )
             success_rate = (
-                (completed_verifications / total_verifications * 100)
+                (completed_count / total_verifications * 100)
                 if total_verifications > 0
                 else 0
             )
 
+            # Mock cost calculation (would be integrated with real pricing)
+            total_cost = total_verifications * 0.15  # Average cost per verification
+            cost_by_service = {service: count * 0.15 for service, count in service_counts}
+
             statistics = {
                 "period_days": period_days,
                 "total_verifications": total_verifications,
-                "completed_verifications": completed_verifications,
+                "completed_verifications": completed_count,
                 "success_rate": round(success_rate, 2),
+                "average_completion_time": round(average_completion_time, 2) if average_completion_time else None,
+                "total_cost": round(total_cost, 2),
                 "status_breakdown": {status: count for status, count in status_counts},
                 "service_usage": {service: count for service, count in service_counts},
+                "cost_by_service": {service: round(cost, 2) for service, cost in cost_by_service.items()},
                 "generated_at": datetime.utcnow().isoformat(),
             }
 
-            logger.info(f"Generated verification statistics for user {user_id}")
+            logger.info(f"Generated enhanced verification statistics for user {user_id}")
 
             return statistics
 
@@ -726,13 +819,15 @@ class VerificationService:
                     )
 
                     if messages and not verification.verification_code:
-                        # Extract codes
+                        # Extract codes with confidence scoring
                         all_codes = []
                         for message in messages:
-                            codes = self.code_extractor.extract_verification_codes(
+                            codes_with_confidence = self.code_extractor.extract_verification_codes_with_confidence(
                                 message, verification.service_name
                             )
-                            all_codes.extend(codes)
+                            # Only use codes with high confidence (>0.7)
+                            high_confidence_codes = [code for code, conf in codes_with_confidence.items() if conf > 0.7]
+                            all_codes.extend(high_confidence_codes)
 
                         if all_codes:
                             verification.verification_code = all_codes[0]

@@ -19,6 +19,10 @@ from models.user_models import Session as UserSession
 from models.user_models import (SubscriptionPlan, User, UserCreate,
                                 UserResponse, UserRole)
 from models.verification_models import VerificationRequest
+from models.tenant_models import Tenant, TenantUser, TenantSettings, TenantInvitation, TenantContext
+from models.rbac_models import Role, Permission, RolePermission, UserRole as RBACUserRole
+from models.call_models import Call, WebRTCSession
+from models.routing_models import RoutingRule, RoutingHistory, ConversationIntelligence
 
 __all__ = [
     # Base
@@ -49,4 +53,22 @@ __all__ = [
     "MessageListResponse",
     "ConversationFilters",
     "MessageFilters",
+    # Tenant models
+    "Tenant",
+    "TenantUser",
+    "TenantSettings",
+    "TenantInvitation",
+    "TenantContext",
+    # RBAC models
+    "Role",
+    "Permission",
+    "RolePermission",
+    "RBACUserRole",
+    # Call models
+    "Call",
+    "WebRTCSession",
+    # Routing models
+    "RoutingRule",
+    "RoutingHistory",
+    "ConversationIntelligence",
 ]

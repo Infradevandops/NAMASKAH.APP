@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 def main():
     try:
-        print("Starting CumApp server...")
+        print("Starting Namaskah.App server...")
 
         # Import the app
         from main import app
@@ -21,7 +21,7 @@ def main():
         print("App imported successfully")
 
         # Start the server
-        uvicorn.run(app, host="0.0.0.0", port=8001, log_level="info", reload=False)
+        uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info", reload=False)
 
     except Exception as e:
         print(f"Error starting server: {e}")

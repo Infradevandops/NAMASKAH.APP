@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '../atoms';
 import TypingIndicator from './TypingIndicator';
+import { useVerification } from '../../hooks/useVerification';
 
 const LiveCollaboration = ({
   documentId,
@@ -22,6 +23,9 @@ const LiveCollaboration = ({
   const [documentContent, setDocumentContent] = useState('');
   const [localChanges, setLocalChanges] = useState([]);
   const contentRef = useRef(null);
+
+  // Use verification hook for status indicators
+  const { verificationStatus, isVerifying } = useVerification();
 
   const userColors = [
     '#3b82f6', '#ef4444', '#10b981', '#f59e0b', 
@@ -379,8 +383,33 @@ const LiveCollaboration = ({
             {isConnected ? 'Connected' : 'Disconnected'}
           </span>
         </div>
-        
+
         {showPresence && connectedUsers.length > 0 && <UserPresence />}
+      </div>
+
+      {/* Verification Status */}
+      <div className="flex items-center space-x-2 p-2 bg-blue-50 border border-blue-300 rounded">
+        <Icon name="shield" size="sm" className="text-blue-500" />
+        <span className="text-sm text-blue-700">Verification:</span>
+        {isVerifying ? (
+          <span className="inline-block px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-200 rounded-full">
+            Verifying...
+          </span>
+        ) : verificationStatus ? (
+          <span
+            className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${
+              verificationStatus === 'completed'
+                ? 'text-green-800 bg-green-200'
+                : verificationStatus === 'failed'
+                ? 'text-red-800 bg-red-200'
+                : 'text-gray-800 bg-gray-200'
+            }`}
+          >
+            {verificationStatus}
+          </span>
+        ) : (
+          <span className="text-gray-500 text-xs">No active verification</span>
+        )}
       </div>
 
       {/* Collaborative Editor */}

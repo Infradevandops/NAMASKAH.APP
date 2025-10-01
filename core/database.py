@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
 Database configuration and session management for CumApp
+Enhanced with PostgreSQL support and connection pooling
 """
 import logging
 import os
-from typing import Generator
+from typing import Generator, Optional
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -31,17 +32,31 @@ if DATABASE_URL.startswith("sqlite"):
         poolclass=StaticPool,
         echo=os.getenv("SQL_DEBUG", "false").lower() == "true",
     )
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    
 else:
     # PostgreSQL configuration for production
-    engine = create_engine(
-        DATABASE_URL,
-        pool_pre_ping=True,
-        pool_recycle=300,
-        echo=os.getenv("SQL_DEBUG", "false").lower() == "true",
-    )
-
-# Create session factory
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    try:
+        from config.postgresql_config import postgresql_config
+        engine = postgresql_config.create_engine()
+        SessionLocal = postgresql_config.get_session_factory(engine)
+        
+        # Validate connection on startup
+        if not postgresql_config.validate_connection(engine):
+            logger.error("PostgreSQL connection validation failed")
+            raise ConnectionError("Failed to connect to PostgreSQL")
+        
+        logger.info("PostgreSQL connection established successfully")
+        
+    except ImportError:
+        logger.warning("PostgreSQL config not available, using basic configuration")
+        engine = create_engine(
+            DATABASE_URL,
+            pool_pre_ping=True,
+            pool_recycle=300,
+            echo=os.getenv("SQL_DEBUG", "false").lower() == "true",
+        )
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base for declarative models
 Base = declarative_base()

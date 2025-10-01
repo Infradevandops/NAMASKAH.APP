@@ -81,20 +81,20 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation Header */}
-      <nav className="bg-white shadow-sm fixed w-full top-0 z-50">
+      <nav className="bg-black shadow-sm fixed w-full top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <Link to="/" className="text-2xl font-bold text-blue-600">
-                CumApp
+              <Link to="/" className="text-2xl font-bold text-white">
+                Namaskah.App
               </Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
-              <Link to="/about" className="text-gray-600 hover:text-blue-600">About</Link>
-              <Link to="/reviews" className="text-gray-600 hover:text-blue-600">Reviews</Link>
-              <Link to="/login" className="text-gray-600 hover:text-blue-600">Login</Link>
+              <Link to="/about" className="text-gray-300 hover:text-white">About</Link>
+              <Link to="/reviews" className="text-gray-300 hover:text-white">Reviews</Link>
+              <Link to="/login" className="text-gray-300 hover:text-white">Login</Link>
               <Link to="/register">
-                <Button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                <Button className="bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200">
                   Get Started
                 </Button>
               </Link>
@@ -175,26 +175,26 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50">
+      <section className={`py-16 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Typography variant="h2" className="text-3xl font-bold mb-4">
+            <Typography variant="h2" className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>
               Everything You Need in One Platform
             </Typography>
-            <Typography className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <Typography className={`text-xl max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               From SMS verification to enterprise communication suite - 
-              CumApp grows with your business needs.
+              Namaskah.App grows with your business needs.
             </Typography>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow">
+              <Card key={index} className={`p-6 text-center hover:shadow-lg transition-shadow ${darkMode ? 'bg-gray-800 text-white' : ''}`}>
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <Typography variant="h3" className="text-xl font-semibold mb-3">
                   {feature.title}
                 </Typography>
-                <Typography className="text-gray-600">
+                <Typography className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   {feature.description}
                 </Typography>
               </Card>

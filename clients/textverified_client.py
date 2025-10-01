@@ -17,10 +17,11 @@ logger = logging.getLogger(__name__)
 class TextVerifiedClient:
     """Client for TextVerified API v2"""
 
-    def __init__(self, api_key: str, email: str):
+    def __init__(self, api_key: str, email: str, webhook_url: str = None):
         self.base_url = "https://www.textverified.com"
         self.api_key = api_key
         self.email = email
+        self.webhook_url = webhook_url
         self.cache = {}  # Token cache
 
     def _is_bearer_token_expired(self) -> bool:
@@ -146,6 +147,10 @@ class TextVerifiedClient:
             "serviceName": service_name,
             "capability": capability,
         }
+        
+        # Add webhook URL if configured
+        if self.webhook_url:
+            json_data["webhookUrl"] = self.webhook_url
 
         try:
             response = requests.post(

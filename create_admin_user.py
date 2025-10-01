@@ -7,7 +7,7 @@ import hashlib
 from datetime import datetime
 
 # Check if we're using PostgreSQL (production) or SQLite (development)
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///cumapp.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///namaskah_app.db")
 
 print(f"🔍 Using database: {DATABASE_URL[:50]}...")  # Log for debugging
 
@@ -55,7 +55,7 @@ else:
     import sqlite3
     
     # Create/connect to database
-    conn = sqlite3.connect('cumapp.db')
+    conn = sqlite3.connect('namaskah_app.db')
     cursor = conn.cursor()
     
     # SQLite syntax
@@ -89,16 +89,16 @@ def hash_password(password):
 
 # Create admin user
 admin_id = "admin-001"
-admin_email = "admin@cumapp.com"
+admin_email = "admin@namaskah.app"
 admin_username = "admin"
 admin_password = hash_password("admin123")
 
 try:
     # Check if users already exist
     if DATABASE_URL.startswith("postgresql://") or DATABASE_URL.startswith("postgres://"):
-        cursor.execute("SELECT COUNT(*) FROM users WHERE email IN (%s, %s)", (admin_email, "demo@cumapp.com"))
+        cursor.execute("SELECT COUNT(*) FROM users WHERE email IN (%s, %s)", (admin_email, "demo@namaskah.app"))
     else:
-        cursor.execute("SELECT COUNT(*) FROM users WHERE email IN (?, ?)", (admin_email, "demo@cumapp.com"))
+        cursor.execute("SELECT COUNT(*) FROM users WHERE email IN (?, ?)", (admin_email, "demo@namaskah.app"))
     
     existing_count = cursor.fetchone()[0]
     
@@ -111,16 +111,16 @@ try:
         
         # Create demo user
         demo_id = "demo-001"
-        cursor.execute(INSERT_SQL, (demo_id, "demo@cumapp.com", "demo", hash_password("demo123"), "Demo User", True, True, "user"))
+        cursor.execute(INSERT_SQL, (demo_id, "demo@namaskah.app", "demo", hash_password("demo123"), "Demo User", True, True, "user"))
         
         conn.commit()
         print("✅ Users created successfully!")
     
     # Verify users exist
     if DATABASE_URL.startswith("postgresql://") or DATABASE_URL.startswith("postgres://"):
-        cursor.execute("SELECT email, role FROM users WHERE email IN (%s, %s)", (admin_email, "demo@cumapp.com"))
+        cursor.execute("SELECT email, role FROM users WHERE email IN (%s, %s)", (admin_email, "demo@namaskah.app"))
     else:
-        cursor.execute("SELECT email, role FROM users WHERE email IN (?, ?)", (admin_email, "demo@cumapp.com"))
+        cursor.execute("SELECT email, role FROM users WHERE email IN (?, ?)", (admin_email, "demo@namaskah.app"))
     
     users = cursor.fetchall()
     print("📋 Current users:")
@@ -128,8 +128,8 @@ try:
         print(f"   - {user[0]} ({user[1]})")
     
     print("\n🔑 Login credentials:")
-    print("   Admin: admin@cumapp.com / admin123")
-    print("   Demo: demo@cumapp.com / demo123")
+    print("   Admin: admin@namaskah.app / admin123")
+    print("   Demo: demo@namaskah.app / demo123")
     
 except Exception as e:
     print(f"❌ Error: {e}")

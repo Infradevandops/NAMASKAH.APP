@@ -54,7 +54,7 @@ def setup_database_url():
         data_dir = Path('data')
         data_dir.mkdir(exist_ok=True)
         
-        sqlite_path = data_dir / 'cumapp.db'
+        sqlite_path = data_dir / 'namaskah_app.db'
         database_url = f'sqlite:///{sqlite_path}'
         os.environ['DATABASE_URL'] = database_url
         logger.info(f"Using SQLite database: {database_url}")

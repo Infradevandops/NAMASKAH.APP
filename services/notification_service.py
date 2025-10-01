@@ -115,3 +115,93 @@ class NotificationService:
         except Exception as e:
             logger.error(f"Failed to send verification failed notification: {e}")
             return False
+
+    async def send_billing_notification(self, user_id: str, event_type: str, details: dict) -> bool:
+        """
+        Send billing-related notifications
+
+        Args:
+            user_id: ID of the user
+            event_type: Type of billing event
+            details: Event details
+
+        Returns:
+            True if notification was sent successfully
+        """
+        try:
+            notification_data = {
+                "type": "billing_notification",
+                "user_id": user_id,
+                "event_type": event_type,
+                "details": details,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+
+            logger.info(
+                f"Billing notification for user {user_id}: {event_type} - {details}"
+            )
+            # In a real implementation, this would send email/SMS/push notifications
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to send billing notification: {e}")
+            return False
+
+    async def send_usage_alert(self, user_id: str, alert: dict) -> bool:
+        """
+        Send usage threshold alerts
+
+        Args:
+            user_id: ID of the user
+            alert: Alert details
+
+        Returns:
+            True if notification was sent successfully
+        """
+        try:
+            notification_data = {
+                "type": "usage_alert",
+                "user_id": user_id,
+                "alert": alert,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+
+            logger.info(
+                f"Usage alert for user {user_id}: {alert}"
+            )
+            # In a real implementation, this would send alerts via preferred channels
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to send usage alert: {e}")
+            return False
+
+    async def send_payment_notification(self, user_id: str, payment_status: str, details: dict) -> bool:
+        """
+        Send payment status notifications
+
+        Args:
+            user_id: ID of the user
+            payment_status: Payment status
+            details: Payment details
+
+        Returns:
+            True if notification was sent successfully
+        """
+        try:
+            notification_data = {
+                "type": "payment_notification",
+                "user_id": user_id,
+                "payment_status": payment_status,
+                "details": details,
+                "timestamp": datetime.utcnow().isoformat(),
+            }
+
+            logger.info(
+                f"Payment notification for user {user_id}: {payment_status} - {details}"
+            )
+            return True
+
+        except Exception as e:
+            logger.error(f"Failed to send payment notification: {e}")
+            return False

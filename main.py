@@ -41,6 +41,11 @@ from api.smart_routing_api import router as smart_routing_router
 from api.subscription_api import router as subscription_router
 from api.verification_api import router as verification_router
 from api.health_api import router as health_router
+from api.tenant_api import router as tenant_router
+from api.rbac_api import router as rbac_router
+from api.call_api import router as call_router
+from api.websocket_api import router as websocket_router
+from api.webhook_api import router as webhook_router
 from clients.unified_client import get_unified_client
 # Import core components
 from core.database import check_database_connection, create_tables
@@ -83,7 +88,7 @@ async def lifespan(app: FastAPI):
 
 # --- FastAPI App Initialization ---
 app = FastAPI(
-    title="CumApp - Communication Platform",
+    title="Namaskah.App - Communication Platform",
     description="Comprehensive SMS and voice communication platform with AI assistance",
     version="1.1.0",
     lifespan=lifespan,
@@ -117,6 +122,11 @@ app.include_router(communication_dashboard_router, tags=["communication_dashboar
 app.include_router(international_routing_router, tags=["international_routing"])
 app.include_router(performance_router, prefix="/api/performance", tags=["performance"])
 app.include_router(health_router, tags=["health"])
+app.include_router(tenant_router, prefix="/api/tenants", tags=["tenants"])
+app.include_router(rbac_router, prefix="/api/rbac", tags=["rbac"])
+app.include_router(call_router, prefix="/api/calls", tags=["calls"])
+app.include_router(websocket_router, tags=["websocket"])
+app.include_router(webhook_router, tags=["webhooks"])
 
 
 # --- Health Check Endpoint (Define before catch-all) ---
@@ -146,7 +156,7 @@ async def health_check():
         
         return {
             "status": "healthy",
-            "app_name": "CumApp",
+            "app_name": "Namaskah.App",
             "version": "1.1.0",
             "database": check_database_connection(),
             "frontend": {
@@ -164,7 +174,7 @@ async def health_check():
         logger.error(f"Health check failed: {e}")
         return {
             "status": "unhealthy",
-            "app_name": "CumApp",
+            "app_name": "Namaskah.App",
             "version": "1.1.0",
             "error": str(e),
         }
@@ -227,14 +237,14 @@ else:
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>CumApp - Development Mode</title>
+            <title>Namaskah.App - Development Mode</title>
             <script src="https://cdn.tailwindcss.com"></script>
         </head>
         <body class="bg-gray-100">
             <div class="container mx-auto mt-20 px-4">
                 <div class="max-w-4xl mx-auto text-center">
                     <div class="bg-white rounded-lg shadow-lg p-8">
-                        <h1 class="text-4xl font-bold text-gray-800 mb-4">CumApp - Development Mode</h1>
+                        <h1 class="text-4xl font-bold text-gray-800 mb-4">Namaskah.App - Development Mode</h1>
                         <p class="text-xl text-gray-600 mb-8">Backend is running, but React frontend needs to be built or started</p>
                         
                         <div class="bg-blue-50 p-6 rounded-lg mb-6">
@@ -267,7 +277,7 @@ else:
 if __name__ == "__main__":
     import uvicorn
 
-    logger.info("Starting CumApp application...")
+    logger.info("Starting Namaskah.App application...")
     uvicorn.run(
         "main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)), reload=True
     )

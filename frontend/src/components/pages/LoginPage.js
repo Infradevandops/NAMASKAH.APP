@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../atoms/Button';
 import FormField from '../molecules/FormField';
 import LoadingSpinner from '../atoms/LoadingSpinner';
 import { useAuth } from '../../hooks/useAuth';
 import { useNotification } from '../../contexts/NotificationContext';
+import { useVerification } from '../../hooks/useVerification';
 
 const LoginPage = ({ onSuccess }) => {
   const [formData, setFormData] = useState({
@@ -13,37 +14,52 @@ const LoginPage = ({ onSuccess }) => {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const { login } = useAuth();
   const { addNotification } = useNotification();
   const navigate = useNavigate();
-  
+
+  // Use verification hook for verification state management
+  const {
+    verificationStatus,
+    verificationError,
+    startVerification,
+    stopVerification,
+    isVerifying
+  } = useVerification();
+
+  useEffect(() => {
+    if (verificationError) {
+      addNotification(`Verification error: ${verificationError}`, 'error');
+    }
+  }, [verificationError, addNotification]);
+
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
@@ -52,33 +68,29 @@ const LoginPage = ({ onSuccess }) => {
       }));
     }
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const result = await login(formData.email, formData.password);
-      
+
       if (result.success) {
-        console.log('Login result success, navigating to dashboard...');
         addNotification('Login successful!', 'success');
+
+        // Start verification process after login success
+        startVerification();
+
         if (onSuccess) {
-          console.log('Calling onSuccess callback');
           onSuccess();
         } else {
-          // Navigate to dashboard after successful login with a delay
-          // to allow the authentication state to update
-          console.log('Navigating to /dashboard in 500ms...');
           setTimeout(() => {
-            console.log('Executing navigation to /dashboard now');
-            // Use window.location.href to force a full page reload
-            // This ensures the authentication state is properly checked
             window.location.href = '/dashboard';
           }, 500);
         }
@@ -91,7 +103,7 @@ const LoginPage = ({ onSuccess }) => {
       setIsSubmitting(false);
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       {/* Back to Home Link */}
@@ -100,10 +112,10 @@ const LoginPage = ({ onSuccess }) => {
           ← Back to Home
         </Link>
       </div>
-      
+
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link to="/" className="flex justify-center">
-          <h1 className="text-3xl font-bold text-blue-600 mb-4">CumApp</h1>
+          <h1 className="text-3xl font-bold text-blue-600 mb-4">Namaskah.App</h1>
         </Link>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account
@@ -115,7 +127,7 @@ const LoginPage = ({ onSuccess }) => {
           </Link>
         </p>
       </div>
-      
+
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
@@ -130,7 +142,7 @@ const LoginPage = ({ onSuccess }) => {
               error={errors.email}
               required
             />
-            
+
             <FormField
               label="Password"
               id="password"
@@ -142,7 +154,7 @@ const LoginPage = ({ onSuccess }) => {
               error={errors.password}
               required
             />
-            
+
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -155,24 +167,24 @@ const LoginPage = ({ onSuccess }) => {
                   Remember me
                 </label>
               </div>
-              
+
               <div className="text-sm">
                 <Link to="/register" className="font-medium text-blue-600 hover:text-blue-500">
                   Forgot your password? Sign up instead
                 </Link>
               </div>
             </div>
-            
+
             <div>
               <Button
                 type="submit"
                 className="w-full"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isVerifying}
               >
-                {isSubmitting ? (
+                {isSubmitting || isVerifying ? (
                   <div className="flex items-center justify-center">
                     <LoadingSpinner size="sm" className="mr-2" />
-                    Signing in...
+                    {isVerifying ? 'Verifying...' : 'Signing in...'}
                   </div>
                 ) : (
                   'Sign in'
@@ -180,7 +192,13 @@ const LoginPage = ({ onSuccess }) => {
               </Button>
             </div>
           </form>
-          
+
+          {verificationStatus && (
+            <div className="mt-4 p-4 bg-blue-50 border border-blue-300 rounded text-blue-700">
+              Verification Status: {verificationStatus}
+            </div>
+          )}
+
           <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -190,7 +208,7 @@ const LoginPage = ({ onSuccess }) => {
                 <span className="px-2 bg-white text-gray-500">Or continue with</span>
               </div>
             </div>
-            
+
             <div className="mt-6 grid grid-cols-2 gap-3">
               <Button variant="outline" className="w-full">
                 <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">
@@ -201,7 +219,7 @@ const LoginPage = ({ onSuccess }) => {
                 </svg>
                 Google
               </Button>
-              
+
               <Button variant="outline" className="w-full">
                 <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>

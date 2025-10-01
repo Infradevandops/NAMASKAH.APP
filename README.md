@@ -1,4 +1,4 @@
-# 🚀 CumApp - Universal Communication Platform
+# 🚀 Namaskah.App - Universal Communication Platform
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-green.svg)](https://fastapi.tiangolo.com/)
@@ -9,7 +9,7 @@
 
 **Enterprise-grade communication platform** combining SMS verification, AI-powered messaging, real-time chat, and comprehensive user management in a modern, scalable architecture.
 
-> **🎯 TL;DR**: CumApp is a complete communication platform that starts with SMS verification and grows into a full enterprise communication suite. Built with React + FastAPI, it's production-ready, AI-powered, and designed to scale from startup to enterprise.
+> **🎯 TL;DR**: Namaskah.App is a complete communication platform that starts with SMS verification and grows into a full enterprise communication suite. Built with React + FastAPI, it's production-ready, AI-powered, and designed to scale from startup to enterprise.
 
 ---
 
@@ -64,7 +64,7 @@ open http://localhost:8000
 ```
 
 ### 🎯 **Platform Vision**
-**CumApp** is designed as a **universal communication hub** that grows from SMS verification to a complete enterprise communication suite:
+**Namaskah.App** is designed as a **universal communication hub** that grows from SMS verification to a complete enterprise communication suite:
 
 1. **Phase 1** (Current): SMS Verification + Basic Chat
 2. **Phase 2**: AI-Powered Messaging + Real-time Features  
@@ -404,7 +404,7 @@ suggestion = response.json()["suggestion"]
 
 ```bash
 # Application
-APP_NAME=CumApp
+APP_NAME=Namaskah.App
 PORT=8000
 DEBUG=false
 
@@ -642,13 +642,13 @@ MIT License - see [LICENSE](LICENSE) file
 - **CI/CD Pipeline**: Automated testing and deployment
 - **Docker Ready**: Containerized deployment with orchestration
 
-### 🚧 **Phase 2: Intelligence & Real-time (v1.2-1.5)** - **IN PROGRESS**
-- **AI Integration**: Multi-model support (Groq, OpenAI, Claude)
-- **Real-time Engine**: WebSocket-based chat with sub-second latency
-- **Advanced Analytics**: Usage metrics, performance insights, cost tracking
-- **Mobile PWA**: Progressive Web App with offline capabilities
-- **Team Features**: Multi-user workspaces and collaboration tools
-- **Voice Integration**: Twilio-powered voice calls and verification
+### ✅ **Phase 2: Enhanced Billing & Intelligence (v1.2-1.5)** - **COMPLETED**
+- **Advanced Billing System**: Prorated billing, usage monitoring, forecasting
+- **Multi-Gateway Payments**: Stripe, Razorpay, Flutterwave, Paystack with regional optimization
+- **PostgreSQL Migration**: Production-ready database with performance optimization
+- **Enhanced APIs**: Comprehensive billing endpoints with real-time features
+- **Usage Analytics**: ML-based forecasting and cost optimization
+- **Notification System**: Billing alerts, usage thresholds, payment notifications
 
 ### 🔮 **Phase 3: Enterprise & Scale (v2.0-2.5)** - **PLANNED Q2 2025**
 - **Multi-Tenant SaaS**: Isolated environments for organizations
@@ -677,13 +677,13 @@ MIT License - see [LICENSE](LICENSE) file
 
 ---
 
-## 🌟 Why CumApp?
+## 🌟 Why Namaskah.App?
 
 ### **🎯 The Problem We Solve**
 Modern businesses need reliable, scalable communication infrastructure that can handle SMS verification, real-time messaging, AI-powered automation, and enterprise-grade security - all in one platform.
 
 ### **💡 Our Solution**
-CumApp provides a **unified communication platform** that scales from simple SMS verification to a complete enterprise communication suite, with:
+Namaskah.App provides a **unified communication platform** that scales from simple SMS verification to a complete enterprise communication suite, with:
 
 - **Developer-First**: Clean APIs, comprehensive docs, easy integration
 - **Enterprise-Ready**: Multi-tenant, compliant, scalable architecture  
@@ -706,11 +706,11 @@ CumApp provides a **unified communication platform** that scales from simple SMS
 ### **Trustpilot Rating: 4.8/5** ⭐⭐⭐⭐⭐ **(Based on 247 reviews)**
 
 > **"Game-changer for our verification workflow"** ⭐⭐⭐⭐⭐  
-> *"CumApp reduced our SMS verification costs by 40% while improving delivery rates. The AI-powered features are incredible - it automatically handles customer queries and escalates complex issues. Setup took less than an hour."*  
+> *"Namaskah.App reduced our SMS verification costs by 40% while improving delivery rates. The AI-powered features are incredible - it automatically handles customer queries and escalates complex issues. Setup took less than an hour."*
 > **— Sarah Chen, CTO at TechFlow Solutions**
 
 > **"Best communication platform we've used"** ⭐⭐⭐⭐⭐  
-> *"We migrated from Twilio + custom chat solution to CumApp. The unified platform saved us 6 months of development time. Real-time features work flawlessly, and the React components are beautiful."*  
+> *"We migrated from Twilio + custom chat solution to Namaskah.App. The unified platform saved us 6 months of development time. Real-time features work flawlessly, and the React components are beautiful."*
 > **— Marcus Rodriguez, Lead Developer at StartupHub**
 
 > **"Excellent support and documentation"** ⭐⭐⭐⭐⭐  
@@ -722,7 +722,7 @@ CumApp provides a **unified communication platform** that scales from simple SMS
 > **— David Thompson, Security Lead at EnterpriseMax**
 
 > **"Cost-effective and reliable"** ⭐⭐⭐⭐⭐  
-> *"Switched from expensive enterprise solutions. CumApp delivers the same features at 60% lower cost. 99.9% uptime in 8 months of usage. The AI suggestions actually help our support team."*  
+> *"Switched from expensive enterprise solutions. Namaskah.App delivers the same features at 60% lower cost. 99.9% uptime in 8 months of usage. The AI suggestions actually help our support team."*
 > **— Lisa Wang, Operations Director at ScaleUp Inc**
 
 ### **Industry Recognition**

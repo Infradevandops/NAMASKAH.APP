@@ -12,10 +12,17 @@ from fastapi.responses import HTMLResponse
 from models import User
 from services.auth_service import get_current_active_user
 from services.websocket_manager import connection_manager, websocket_handler
+from services.webrtc_service import WebRTCService
+from core.database import get_db
+from typing import Dict, Any
+import json
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/ws", tags=["websocket"])
+
+# Global WebRTC signaling rooms
+webrtc_rooms: Dict[str, Dict[str, WebSocket]] = {}  # room_id -> {user_id: websocket}
 
 
 @router.websocket("/chat")
@@ -61,6 +68,127 @@ async def websocket_endpoint(
 
     # Handle WebSocket connection with authentication
     await websocket_handler.handle_websocket(websocket, token)
+
+
+@router.websocket("/webrtc/{call_id}")
+async def webrtc_signaling_endpoint(
+    websocket: WebSocket,
+    call_id: str,
+    token: Optional[str] = Query(None, description="JWT token for authentication"),
+):
+    """
+    WebRTC signaling endpoint for voice/video calls
+
+    Supports:
+    - offer/answer exchange
+    - ICE candidate exchange
+    - Call participant management
+    - Connection quality monitoring
+
+    Authentication:
+    - Pass JWT token as query parameter: /ws/webrtc/{call_id}?token=your_jwt_token
+    """
+    await websocket.accept()
+
+    # Authenticate user
+    user_id = None
+    if token:
+        try:
+            from auth.jwt_handler import decode_token
+            payload = decode_token(token)
+            user_id = payload.get("sub")
+        except Exception as e:
+            logger.error(f"WebRTC authentication failed: {e}")
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Invalid token")
+            return
+
+    if not user_id:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION, reason="Authentication required")
+        return
+
+    # Initialize WebRTC service
+    db = next(get_db())
+    webrtc_service = WebRTCService()
+
+    # Join WebRTC room
+    room_id = call_id
+    if room_id not in webrtc_rooms:
+        webrtc_rooms[room_id] = {}
+
+    webrtc_rooms[room_id][str(user_id)] = websocket
+
+    logger.info(f"User {user_id} joined WebRTC room {room_id}")
+
+    try:
+        while True:
+            # Receive WebRTC signaling message
+            data = await websocket.receive_text()
+            message = json.loads(data)
+
+            message_type = message.get("type")
+            target_user_id = message.get("target_user_id")
+
+            # Add sender information
+            message["from_user_id"] = str(user_id)
+            message["timestamp"] = "now"
+
+            if message_type == "join_call":
+                # User joining the call
+                participants = webrtc_service.get_call_participants(int(call_id))
+                await websocket.send_text(json.dumps({
+                    "type": "call_participants",
+                    "participants": participants,
+                    "call_id": call_id
+                }))
+
+            elif message_type in ["offer", "answer", "ice_candidate"]:
+                # Forward signaling messages to target user
+                if target_user_id and target_user_id in webrtc_rooms.get(room_id, {}):
+                    target_ws = webrtc_rooms[room_id][target_user_id]
+                    await target_ws.send_text(json.dumps(message))
+                else:
+                    # Broadcast to all participants in the room (for conference calls)
+                    for participant_id, participant_ws in webrtc_rooms.get(room_id, {}).items():
+                        if participant_id != str(user_id):
+                            try:
+                                await participant_ws.send_text(json.dumps(message))
+                            except Exception as e:
+                                logger.error(f"Failed to send message to participant {participant_id}: {e}")
+
+            elif message_type == "quality_update":
+                # Update connection quality
+                quality_score = message.get("quality_score", 1.0)
+                webrtc_service.update_connection_quality(
+                    int(message.get("session_id", 0)),
+                    int(user_id),
+                    quality_score
+                )
+
+            elif message_type == "leave_call":
+                # User leaving the call
+                break
+
+            elif message_type == "ping":
+                # Respond to ping for connection health
+                await websocket.send_text(json.dumps({
+                    "type": "pong",
+                    "timestamp": "now"
+                }))
+
+    except WebSocketDisconnect:
+        logger.info(f"User {user_id} disconnected from WebRTC room {room_id}")
+    except Exception as e:
+        logger.error(f"WebRTC signaling error for user {user_id}: {e}")
+    finally:
+        # Clean up: remove user from room
+        if room_id in webrtc_rooms and str(user_id) in webrtc_rooms[room_id]:
+            del webrtc_rooms[room_id][str(user_id)]
+
+            # If room is empty, clean it up
+            if not webrtc_rooms[room_id]:
+                del webrtc_rooms[room_id]
+
+        logger.info(f"Cleaned up WebRTC connection for user {user_id} in room {room_id}")
 
 
 @router.get("/status")
@@ -147,11 +275,14 @@ async def websocket_health():
     """
     online_count = len(connection_manager.get_online_users())
 
+    active_webrtc_rooms = len(webrtc_rooms)
+
     return {
         "status": "healthy",
         "service": "websocket",
-        "version": "1.1.0",
+        "version": "2.0.0",
         "online_users": online_count,
+        "active_webrtc_rooms": active_webrtc_rooms,
         "features": [
             "jwt_authentication",
             "real_time_messaging",
@@ -159,6 +290,10 @@ async def websocket_health():
             "presence_tracking",
             "message_delivery",
             "conversation_broadcasting",
+            "webrtc_signaling",
+            "voice_video_calls",
+            "conference_calls",
+            "connection_quality_monitoring",
         ],
     }
 

@@ -1,0 +1,47 @@
+# Development and Testing Dependencies
+pytest==7.4.0
+pytest-cov==4.1.0
+pytest-asyncio==0.21.1
+pytest-mock==3.11.1
+black==23.7.0
+isort==5.12.0
+flake8==6.0.0
+mypy==1.5.1
+bandit==1.7.5
+safety==2.3.5
+
+# Testing utilities
+httpx==0.24.1
+faker==19.3.1
+factory-boy==3.2.1
+
+# Development tools
+pre-commit==3.3.3
+jupyter==1.0.0
+
+# Documentation
+mkdocs==1.5.2
+mkdocs-material==9.1.18
+
+# Performance testing
+locust==2.15.1
+
+# Code quality
+radon==6.0.1
+xenon==0.9.1
+
+# API testing
+requests==2.31.0
+newman==5.3.2  # Postman collection runner
+
+# Database testing
+psycopg2-binary==2.9.7
+
+# Redis testing
+redis==4.6.0
+
+# Environment management
+python-dotenv==1.0.0
+
+# Type checking
+types-all==1.0.0

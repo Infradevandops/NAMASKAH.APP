@@ -1,7 +1,7 @@
-const CACHE_NAME = 'cumapp-v2';
-const STATIC_CACHE = 'cumapp-static-v2';
-const DYNAMIC_CACHE = 'cumapp-dynamic-v2';
-const API_CACHE = 'cumapp-api-v2';
+const CACHE_NAME = 'namaskah-app-v2';
+const STATIC_CACHE = 'namaskah-app-static-v2';
+const DYNAMIC_CACHE = 'namaskah-app-dynamic-v2';
+const API_CACHE = 'namaskah-app-api-v2';
 
 // Static assets to cache immediately
 const STATIC_ASSETS = [

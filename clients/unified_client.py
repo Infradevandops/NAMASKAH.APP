@@ -40,10 +40,11 @@ class UnifiedServiceClient:
         """Initialize TextVerified client"""
         api_key = os.getenv('TEXTVERIFIED_API_KEY')
         email = os.getenv('TEXTVERIFIED_EMAIL')
+        webhook_url = os.getenv('TEXTVERIFIED_WEBHOOK_URL')
         
         if api_key and email:
             try:
-                client = TextVerifiedClient(api_key, email)
+                client = TextVerifiedClient(api_key, email, webhook_url)
                 logger.info("TextVerified client initialized successfully")
                 return client
             except Exception as e:

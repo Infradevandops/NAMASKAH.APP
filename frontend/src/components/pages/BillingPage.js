@@ -5,12 +5,14 @@ import {
   PaymentMethods, 
   InvoiceHistory, 
   UsageMetrics,
-  DataExporter 
+  DataExporter,
+  BillingForecastWidget
 } from '../molecules';
 import { Button, Icon } from '../atoms';
 
 const BillingPage = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [planChangePreview, setPlanChangePreview] = useState(null);
   const [currentPlan, setCurrentPlan] = useState(null);
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [usageData, setUsageData] = useState({});
@@ -136,9 +138,30 @@ const BillingPage = () => {
     ]);
   }, []);
 
-  const handlePlanUpgrade = (planId) => {
-    console.log('Upgrading to plan:', planId);
+  const handlePlanChange = (newPlan) => {
+    const remainingDays = 15; // Mock data
+    const totalDaysInCycle = 30; // Mock data
+
+    const dailyRateOld = currentPlan.price / totalDaysInCycle;
+    const dailyRateNew = newPlan.price / totalDaysInCycle;
+
+    const creditForOldPlan = dailyRateOld * remainingDays;
+    const costForNewPlan = dailyRateNew * remainingDays;
+
+    const proratedAmount = costForNewPlan - creditForOldPlan;
+
+    setPlanChangePreview({
+      newPlan,
+      proratedAmount,
+      creditForOldPlan,
+      costForNewPlan,
+    });
+
     setShowUpgradeModal(true);
+  };
+
+  const handlePlanUpgrade = (plan) => {
+    handlePlanChange(plan);
   };
 
   const handlePlanDowngrade = (planId) => {
@@ -220,6 +243,7 @@ const BillingPage = () => {
 
   const renderOverview = () => (
     <div className="space-y-6">
+      <BillingForecastWidget />
       {/* Billing Alerts */}
       {billingAlerts.length > 0 && (
         <div className="space-y-3">
@@ -378,6 +402,47 @@ const BillingPage = () => {
       </div>
     </div>
   );
+
+  const renderPlanChangePreviewModal = () => {
+    if (!planChangePreview) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-8 max-w-md w-full">
+          <h2 className="text-2xl font-bold mb-4">Confirm Plan Change</h2>
+          <p className="mb-4">You are about to switch to the <strong>{planChangePreview.newPlan.name}</strong> plan.</p>
+          
+          <div className="bg-gray-100 p-4 rounded-lg mb-4">
+            <div className="flex justify-between">
+              <span>Credit for unused time on current plan:</span>
+              <span>-{formatCurrency(planChangePreview.creditForOldPlan)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Cost for new plan for the rest of the cycle:</span>
+              <span>{formatCurrency(planChangePreview.costForNewPlan)}</span>
+            </div>
+            <hr className="my-2" />
+            <div className="flex justify-between font-bold">
+              <span>Amount due today:</span>
+              <span>{formatCurrency(planChangePreview.proratedAmount)}</span>
+            </div>
+          </div>
+
+          <div className="flex justify-end space-x-4">
+            <Button variant="outline" onClick={() => setShowUpgradeModal(false)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={() => {
+              // Handle the actual upgrade here
+              setShowUpgradeModal(false);
+            }}>
+              Confirm Upgrade
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -545,7 +610,7 @@ const BillingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+      {renderPlanChangePreviewModal()}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
         <div className="mb-8">

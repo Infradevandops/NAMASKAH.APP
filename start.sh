@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Unified startup script for CumApp
-echo "🚀 Starting CumApp..."
+# Unified startup script for Namaskah.App
+echo "🚀 Starting Namaskah.App..."
 
 # Check if virtual environment is activated
 if [[ "$VIRTUAL_ENV" == "" ]]; then

@@ -25,7 +25,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Database configuration
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/cumapp")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/namaskah_app")
 
 
 class DatabaseCleanupManager:

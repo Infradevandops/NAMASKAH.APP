@@ -1,12 +1,44 @@
 services:
+  # Main application service
   - type: web
-    name: cumapp-platform
+    name: namaskah-app-enterprise
     env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn main:app --host=0.0.0.0 --port=10000"
+    region: oregon
+    plan: starter
+    buildCommand: |
+      pip install -r requirements.txt
+      python scripts/setup_production_deployment.py
+    startCommand: "gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT --worker-tmp-dir /tmp"
+    healthCheckPath: /health
     envVars:
+      # Core Application
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: false
+      - key: APP_VERSION
+        value: 2.0.0
+      - key: SECRET_KEY
+        fromSecret: true
       - key: JWT_SECRET_KEY
         fromSecret: true
+
+      # Database
+      - key: DATABASE_URL
+        fromDatabase: true
+      - key: DB_POOL_SIZE
+        value: 10
+      - key: DB_MAX_OVERFLOW
+        value: 20
+
+      # Redis (for caching and sessions)
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: namaskah-redis
+          property: connectionString
+
+      # External APIs
       - key: TEXTVERIFIED_API_KEY
         fromSecret: true
       - key: TWILIO_ACCOUNT_SID
@@ -15,3 +47,49 @@ services:
         fromSecret: true
       - key: GROQ_API_KEY
         fromSecret: true
+
+      # Monitoring & Security
+      - key: SENTRY_DSN
+        fromSecret: true
+      - key: SENTRY_ENVIRONMENT
+        value: production
+      - key: ENABLE_PERFORMANCE_MONITORING
+        value: true
+
+      # Security
+      - key: CORS_ORIGINS
+        value: '["https://namaskah.app", "https://www.namaskah.app"]'
+      - key: ALLOWED_HOSTS
+        value: '["namaskah-app-enterprise.onrender.com", "namaskah.app", "www.namaskah.app"]'
+      - key: SECURE_SSL_REDIRECT
+        value: true
+      - key: SESSION_COOKIE_SECURE
+        value: true
+      - key: CSRF_COOKIE_SECURE
+        value: true
+
+      # Rate Limiting
+      - key: RATE_LIMIT_ENABLED
+        value: true
+      - key: RATE_LIMIT_REQUESTS_PER_MINUTE
+        value: 100
+
+      # Health Checks
+      - key: HEALTH_CHECK_ENABLED
+        value: true
+
+      # Logging
+      - key: LOG_LEVEL
+        value: INFO
+
+  # Redis service for caching
+  - type: redis
+    name: namaskah-redis
+    ipAllowList: []  # Only accessible by services in this project
+
+  # PostgreSQL database
+  - type: pserv
+    name: namaskah-db
+    env: postgres
+    plan: starter
+    ipAllowList: []  # Only accessible by services in this project

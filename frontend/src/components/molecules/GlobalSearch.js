@@ -49,7 +49,7 @@ const GlobalSearch = ({
   }, []);
 
   // Debounced search function
-  const debouncedSearch = useCallback((searchQuery, category) => {
+  const debouncedSearch = useCallback((searchQuery) => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
@@ -64,17 +64,9 @@ const GlobalSearch = ({
       setIsLoading(true);
       
       try {
-        // Mock search results - in a real app, this would be an API call
-        const mockResults = await performGlobalSearch(searchQuery, category);
-        setResults(mockResults);
-        setSearchStats({
-          total: mockResults.length,
-          categories: mockResults.reduce((acc, result) => {
-            acc[result.category] = (acc[result.category] || 0) + 1;
-            return acc;
-          }, {}),
-          searchTime: Math.random() * 100 + 50 // Mock search time
-        });
+        const response = await fetch(`/api/search?q=${searchQuery}`);
+        const data = await response.json();
+        setResults(data.results);
       } catch (error) {
         console.error('Search failed:', error);
         setResults([]);
@@ -84,114 +76,6 @@ const GlobalSearch = ({
     }, debounceMs);
   }, [debounceMs]);
 
-  // Mock search function - replace with real API call
-  const performGlobalSearch = async (query, category) => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 200));
-
-    const mockData = {
-      messages: [
-        { id: 1, title: 'Welcome message template', content: 'Hello and welcome to our service...', type: 'template', date: '2024-01-15' },
-        { id: 2, title: 'Follow-up campaign', content: 'Thank you for your interest...', type: 'campaign', date: '2024-01-14' },
-        { id: 3, title: 'Support conversation', content: 'How can I help you today?', type: 'conversation', date: '2024-01-13' }
-      ],
-      files: [
-        { id: 4, title: 'Campaign Report Q1.pdf', content: 'Quarterly campaign performance report', type: 'pdf', size: '2.4 MB', date: '2024-01-12' },
-        { id: 5, title: 'Customer List.csv', content: 'Updated customer contact information', type: 'csv', size: '856 KB', date: '2024-01-11' },
-        { id: 6, title: 'Brand Guidelines.docx', content: 'Company branding and style guide', type: 'docx', size: '1.2 MB', date: '2024-01-10' }
-      ],
-      users: [
-        { id: 7, title: 'John Smith', content: 'Marketing Manager - john.smith@company.com', type: 'user', role: 'manager', date: '2024-01-09' },
-        { id: 8, title: 'Sarah Johnson', content: 'Sales Representative - sarah.j@company.com', type: 'user', role: 'sales', date: '2024-01-08' },
-        { id: 9, title: 'Mike Davis', content: 'Customer Support - mike.davis@company.com', type: 'user', role: 'support', date: '2024-01-07' }
-      ],
-      numbers: [
-        { id: 10, title: '+1 (555) 123-4567', content: 'Primary business line - Active', type: 'phone', status: 'active', date: '2024-01-06' },
-        { id: 11, title: '+1 (555) 987-6543', content: 'Campaign line - Available', type: 'phone', status: 'available', date: '2024-01-05' },
-        { id: 12, title: '+1 (555) 456-7890', content: 'Support line - In use', type: 'phone', status: 'busy', date: '2024-01-04' }
-      ],
-      campaigns: [
-        { id: 13, title: 'Spring Sale 2024', content: 'Seasonal promotion campaign', type: 'campaign', status: 'active', date: '2024-01-03' },
-        { id: 14, title: 'New Customer Welcome', content: 'Onboarding message sequence', type: 'campaign', status: 'draft', date: '2024-01-02' },
-        { id: 15, title: 'Holiday Greetings', content: 'End of year customer appreciation', type: 'campaign', status: 'completed', date: '2024-01-01' }
-      ],
-      analytics: [
-        { id: 16, title: 'Message Delivery Report', content: 'Daily delivery statistics and metrics', type: 'report', date: '2024-01-15' },
-        { id: 17, title: 'User Engagement Analysis', content: 'Weekly user activity and engagement data', type: 'analysis', date: '2024-01-14' },
-        { id: 18, title: 'Revenue Dashboard', content: 'Monthly revenue and growth metrics', type: 'dashboard', date: '2024-01-13' }
-      ]
-    };
-
-    let searchResults = [];
-    const queryLower = query.toLowerCase();
-
-    // Search in selected category or all categories
-    const categoriesToSearch = category === 'all' ? Object.keys(mockData) : [category];
-
-    categoriesToSearch.forEach(cat => {
-      if (mockData[cat]) {
-        const categoryResults = mockData[cat]
-          .filter(item => 
-            item.title.toLowerCase().includes(queryLower) ||
-            item.content.toLowerCase().includes(queryLower)
-          )
-          .map(item => ({
-            ...item,
-            category: cat,
-            relevance: calculateRelevance(item, queryLower),
-            highlights: highlightMatches(item, queryLower)
-          }));
-        
-        searchResults = [...searchResults, ...categoryResults];
-      }
-    });
-
-    // Sort by relevance and limit results
-    return searchResults
-      .sort((a, b) => b.relevance - a.relevance)
-      .slice(0, maxResults);
-  };
-
-  const calculateRelevance = (item, query) => {
-    let score = 0;
-    const titleLower = item.title.toLowerCase();
-    const contentLower = item.content.toLowerCase();
-
-    // Title matches are more relevant
-    if (titleLower.includes(query)) {
-      score += titleLower.indexOf(query) === 0 ? 100 : 50;
-    }
-
-    // Content matches
-    if (contentLower.includes(query)) {
-      score += 25;
-    }
-
-    // Exact matches get higher scores
-    if (titleLower === query || contentLower === query) {
-      score += 200;
-    }
-
-    // Recent items get slight boost
-    const itemDate = new Date(item.date);
-    const daysSinceCreated = (Date.now() - itemDate.getTime()) / (1000 * 60 * 60 * 24);
-    score += Math.max(0, 10 - daysSinceCreated);
-
-    return score;
-  };
-
-  const highlightMatches = (item, query) => {
-    const highlightText = (text, query) => {
-      if (!query || !text) return text;
-      const regex = new RegExp(`(${query})`, 'gi');
-      return text.replace(regex, '<mark>$1</mark>');
-    };
-
-    return {
-      title: highlightText(item.title, query),
-      content: highlightText(item.content, query)
-    };
-  };
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -200,7 +84,7 @@ const GlobalSearch = ({
     
     if (value.trim()) {
       setIsOpen(true);
-      debouncedSearch(value, selectedCategory);
+      debouncedSearch(value);
     } else {
       setIsOpen(false);
       setResults([]);
@@ -255,13 +139,21 @@ const GlobalSearch = ({
         category: selectedCategory,
         results: results
       });
+      // Track search analytics
+      fetch('/api/analytics', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ query: query.trim(), num_results: results.length })
+      });
     }
   };
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
     if (query.trim()) {
-      debouncedSearch(query, categoryId);
+      debouncedSearch(query);
     }
   };
 
@@ -280,7 +172,7 @@ const GlobalSearch = ({
   const selectRecentSearch = (recentQuery) => {
     setQuery(recentQuery);
     setIsOpen(true);
-    debouncedSearch(recentQuery, selectedCategory);
+    debouncedSearch(recentQuery);
   };
 
   const clearRecentSearches = () => {
@@ -295,7 +187,8 @@ const GlobalSearch = ({
       users: 'user',
       numbers: 'phone',
       campaigns: 'megaphone',
-      analytics: 'barChart'
+      analytics: 'barChart',
+      suggestion: 'search'
     };
     return iconMap[result.category] || 'search';
   };
@@ -405,18 +298,6 @@ const GlobalSearch = ({
             {/* Search Results */}
             {!isLoading && results.length > 0 && (
               <>
-                {/* Search Stats */}
-                <div className="px-3 py-2 bg-gray-50 border-b border-gray-200">
-                  <div className="flex items-center justify-between text-xs text-gray-600">
-                    <span>
-                      {searchStats.total} result{searchStats.total !== 1 ? 's' : ''} found
-                    </span>
-                    <span>
-                      {searchStats.searchTime?.toFixed(0)}ms
-                    </span>
-                  </div>
-                </div>
-
                 {/* Results List */}
                 <div className="py-1">
                   {results.map((result, index) => (
@@ -438,24 +319,8 @@ const GlobalSearch = ({
                       <div className="flex-1 min-w-0">
                         <div 
                           className="text-sm font-medium text-gray-900 truncate"
-                          dangerouslySetInnerHTML={{ __html: result.highlights?.title || result.title }}
-                        />
-                        <div 
-                          className="text-xs text-gray-600 truncate mt-1"
-                          dangerouslySetInnerHTML={{ __html: result.highlights?.content || result.content }}
-                        />
-                        <div className="flex items-center space-x-2 mt-1">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-${getResultColor(result)}-100 text-${getResultColor(result)}-800`}>
-                            {result.category}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            {formatResultDate(result.date)}
-                          </span>
-                          {result.size && (
-                            <span className="text-xs text-gray-500">
-                              {result.size}
-                            </span>
-                          )}
+                        >
+                          {result.title}
                         </div>
                       </div>
                     </button>

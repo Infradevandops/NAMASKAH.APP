@@ -23,14 +23,14 @@ def create_default_users(db: Session):
     """Create default users for testing"""
     
     # Check if admin user already exists
-    admin_user = db.query(User).filter(User.email == "admin@cumapp.com").first()
+    admin_user = db.query(User).filter(User.email == "admin@namaskah.app").first()
     if admin_user:
         logger.info("Admin user already exists")
         return
     
     # Create admin user
     admin_user = User(
-        email="admin@cumapp.com",
+        email="admin@namaskah.app",
         username="admin",
         hashed_password=hash_password("admin123"),
         full_name="Admin User",
@@ -43,7 +43,7 @@ def create_default_users(db: Session):
     
     # Create demo user
     demo_user = User(
-        email="demo@cumapp.com", 
+        email="demo@namaskah.app",
         username="demo",
         hashed_password=hash_password("demo123"),
         full_name="Demo User",
@@ -56,7 +56,7 @@ def create_default_users(db: Session):
     
     # Create test user
     test_user = User(
-        email="test@cumapp.com",
+        email="test@namaskah.app",
         username="test", 
         hashed_password=hash_password("test123"),
         full_name="Test User",
@@ -70,9 +70,9 @@ def create_default_users(db: Session):
     db.commit()
     
     logger.info("✅ Default users created:")
-    logger.info("   Admin: admin@cumapp.com / admin123")
-    logger.info("   Demo:  demo@cumapp.com / demo123") 
-    logger.info("   Test:  test@cumapp.com / test123")
+    logger.info("   Admin: admin@namaskah.app / admin123")
+    logger.info("   Demo:  demo@namaskah.app / demo123")
+    logger.info("   Test:  test@namaskah.app / test123")
 
 
 def main():

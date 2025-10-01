@@ -35,7 +35,7 @@ env/
 # Database
 *.db
 *.sqlite3
-cumapp.db
+namaskah_app.db
 
 # Logs
 logs/
