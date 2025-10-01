@@ -383,7 +383,7 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(description="Migrate SQLite database to PostgreSQL")
-    parser.add_argument("--sqlite-path", default="cumapp.db", help="Path to SQLite database")
+    parser.add_argument("--sqlite-path", default="namaskah.db", help="Path to SQLite database")
     parser.add_argument("--postgresql-url", help="PostgreSQL connection URL")
     parser.add_argument("--no-backup", action="store_true", help="Skip PostgreSQL backup")
     parser.add_argument("--dry-run", action="store_true", help="Validate connections only")

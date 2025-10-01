@@ -90,7 +90,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Namaskah.App - Communication Platform",
     description="Comprehensive SMS and voice communication platform with AI assistance",
-    version="1.1.0",
+    version="1.6.0",
     lifespan=lifespan,
 )
 
@@ -157,7 +157,7 @@ async def health_check():
         return {
             "status": "healthy",
             "app_name": "Namaskah.App",
-            "version": "1.1.0",
+            "version": "1.6.0",
             "database": check_database_connection(),
             "frontend": {
                 "build_status": frontend_status,
@@ -175,7 +175,7 @@ async def health_check():
         return {
             "status": "unhealthy",
             "app_name": "Namaskah.App",
-            "version": "1.1.0",
+            "version": "1.6.0",
             "error": str(e),
         }
 

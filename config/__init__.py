@@ -21,7 +21,7 @@ class Config:
     JWT_EXPIRE_MINUTES = int(os.getenv('JWT_EXPIRE_MINUTES', 30))
     
     # Database
-    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./cumapp.db')
+    DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///./namaskah.db')
     REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
     
     # CORS
@@ -50,7 +50,7 @@ class Config:
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
-    DATABASE_URL = 'sqlite:///./cumapp_dev.db'
+    DATABASE_URL = 'sqlite:///./namaskah_dev.db'
 
 
 class ProductionConfig(Config):

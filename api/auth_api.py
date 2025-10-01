@@ -101,7 +101,7 @@ async def register_user(user_data: SimpleRegisterRequest):
             return hashlib.sha256(password.encode()).hexdigest()
 
         # Connect to database
-        conn = sqlite3.connect('cumapp.db')
+        conn = sqlite3.connect('namaskah.db')
         cursor = conn.cursor()
 
         # Check if user exists
@@ -157,7 +157,7 @@ async def login_user(login_data: LoginRequest):
             return hashlib.sha256(plain_password.encode()).hexdigest() == hashed_password
 
         # Connect to database
-        conn = sqlite3.connect('cumapp.db')
+        conn = sqlite3.connect('namaskah.db')
         cursor = conn.cursor()
         
         # Find user
