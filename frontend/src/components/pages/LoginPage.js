@@ -17,7 +17,6 @@ const LoginPage = ({ onSuccess }) => {
 
   const { login } = useAuth();
   const { addNotification } = useNotification();
-  const navigate = useNavigate();
 
   // Use verification hook for verification state management
   const {
