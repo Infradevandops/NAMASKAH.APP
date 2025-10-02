@@ -5,7 +5,7 @@ export function useVerification() {
   const [verificationStatus, setVerificationStatus] = useState(null);
   const [verificationError, setVerificationError] = useState(null);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationId, setVerificationId] = useState(null);
+
   const [ws, setWs] = useState(null);
   const [usePolling, setUsePolling] = useState(false);
   const pollingIntervalRef = useRef(null);
@@ -45,7 +45,6 @@ export function useVerification() {
       // Call API to create a new verification
       const response = await axios.post('/api/verification/start');
       const { id, status } = response.data;
-      setVerificationId(id);
       setVerificationStatus(status);
 
       // Show initial notification
@@ -193,7 +192,6 @@ export function useVerification() {
     stopPolling();
     setIsVerifying(false);
     setVerificationStatus(null);
-    setVerificationId(null);
     setVerificationError(null);
     setUsePolling(false);
   }, [ws, stopPolling]);

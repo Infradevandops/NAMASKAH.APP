@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/atoms/Card.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/LoginForm.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/atoms/Input.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/DashboardPage.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/__tests__/visual/Button.visual.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/molecules/NotificationCenter.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/hooks/useVerification.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/hooks/useAuth.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/molecules/Modal.simple.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/molecules/Modal.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/atoms/Button.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/LoginPage.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/atoms/Button.simple.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/molecules/LiveCollaboration.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/LoginPage.critical.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/VerificationDashboard.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/LoginPageSignUp.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/AccountDeactivation.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/components/pages/VerificationAnalytics.test.js">
+  </file>
+  <file path="/Users/machine/Project/GitHub/Namaskah/frontend/src/App.test.js">
+  </file>
+</testExecutions>

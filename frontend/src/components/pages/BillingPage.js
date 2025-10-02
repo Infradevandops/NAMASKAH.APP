@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from '../organisms';
-import { 
-  SubscriptionPlans, 
-  PaymentMethods, 
-  InvoiceHistory, 
+import {
+  SubscriptionPlans,
+  PaymentMethods,
+  InvoiceHistory,
   UsageMetrics,
-  DataExporter,
   BillingForecastWidget
 } from '../molecules';
 import { Button, Icon } from '../atoms';
@@ -19,7 +18,6 @@ const BillingPage = () => {
   const [invoices, setInvoices] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [billingAlerts, setBillingAlerts] = useState([]);
 
   const tabs = [

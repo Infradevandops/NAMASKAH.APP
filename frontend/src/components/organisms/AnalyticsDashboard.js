@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon } from '../atoms';
 import { InteractiveChart } from '../molecules';
@@ -65,19 +65,9 @@ const AnalyticsDashboard = ({
     }
   };
 
-  useEffect(() => {
-    fetchDashboardData();
-    
-    // Set up auto-refresh
-    if (refreshInterval) {
-      const interval = setInterval(fetchDashboardData, refreshInterval * 1000);
-      return () => clearInterval(interval);
-    }
-  }, [dashboardType, timeRange, refreshInterval]);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     setLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       const dashboardWidgets = [
@@ -85,9 +75,9 @@ const AnalyticsDashboard = ({
           id: 'messages-sent',
           title: 'Messages Sent',
           type: 'metric',
-          value: mockData.overview.totalMessages.current,
-          previousValue: mockData.overview.totalMessages.previous,
-          trend: mockData.overview.totalMessages.trend,
+          value: mockData[dashboardType].totalMessages?.current || mockData.overview.totalMessages.current,
+          previousValue: mockData[dashboardType].totalMessages?.previous || mockData.overview.totalMessages.previous,
+          trend: mockData[dashboardType].totalMessages?.trend || mockData.overview.totalMessages.trend,
           icon: 'messageSquare',
           color: 'blue'
         },
@@ -95,9 +85,9 @@ const AnalyticsDashboard = ({
           id: 'success-rate',
           title: 'Success Rate',
           type: 'metric',
-          value: mockData.overview.successRate.current,
-          previousValue: mockData.overview.successRate.previous,
-          trend: mockData.overview.successRate.trend,
+          value: mockData[dashboardType].successRate?.current || mockData.overview.successRate.current,
+          previousValue: mockData[dashboardType].successRate?.previous || mockData.overview.successRate.previous,
+          trend: mockData[dashboardType].successRate?.trend || mockData.overview.successRate.trend,
           icon: 'target',
           color: 'green',
           unit: '%'
@@ -106,9 +96,9 @@ const AnalyticsDashboard = ({
           id: 'response-time',
           title: 'Avg Response Time',
           type: 'metric',
-          value: mockData.overview.avgResponseTime.current,
-          previousValue: mockData.overview.avgResponseTime.previous,
-          trend: mockData.overview.avgResponseTime.trend,
+          value: mockData[dashboardType].avgResponseTime?.current || mockData.overview.avgResponseTime.current,
+          previousValue: mockData[dashboardType].avgResponseTime?.previous || mockData.overview.avgResponseTime.previous,
+          trend: mockData[dashboardType].avgResponseTime?.trend || mockData.overview.avgResponseTime.trend,
           icon: 'clock',
           color: 'purple',
           unit: 'ms'
@@ -117,9 +107,9 @@ const AnalyticsDashboard = ({
           id: 'revenue',
           title: 'Revenue',
           type: 'metric',
-          value: mockData.overview.revenue.current,
-          previousValue: mockData.overview.revenue.previous,
-          trend: mockData.overview.revenue.trend,
+          value: mockData[dashboardType].revenue?.current || mockData.overview.revenue.current,
+          previousValue: mockData[dashboardType].revenue?.previous || mockData.overview.revenue.previous,
+          trend: mockData[dashboardType].revenue?.trend || mockData.overview.revenue.trend,
           icon: 'dollarSign',
           color: 'green',
           unit: '$'
@@ -157,11 +147,21 @@ const AnalyticsDashboard = ({
           size: 'medium'
         }
       ];
-      
+
       setWidgets(dashboardWidgets);
       setLoading(false);
     }, 1000);
-  };
+  }, [dashboardType]);
+
+  useEffect(() => {
+    fetchDashboardData();
+
+    // Set up auto-refresh
+    if (refreshInterval) {
+      const interval = setInterval(fetchDashboardData, refreshInterval * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [dashboardType, timeRange, refreshInterval, fetchDashboardData]);
 
   const formatMetricValue = (value, unit = '') => {
     if (unit === '$') {

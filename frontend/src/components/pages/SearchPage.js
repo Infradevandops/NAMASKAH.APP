@@ -10,7 +10,6 @@ const SearchPage = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedResults, setSelectedResults] = useState([]);
-  const [searchHistory, setSearchHistory] = useState([]);
 
   // Mock data for demonstration
   const mockResults = [
@@ -235,14 +234,7 @@ const SearchPage = () => {
       setCurrentQuery(searchData.originalQuery || searchData.query || '');
       setCurrentPage(1);
       
-      // Add to search history
-      if (searchData.originalQuery || searchData.query) {
-        const query = searchData.originalQuery || searchData.query;
-        setSearchHistory(prev => {
-          const newHistory = [query, ...prev.filter(item => item !== query)].slice(0, 10);
-          return newHistory;
-        });
-      }
+
       
     } catch (err) {
       setError('Failed to perform search. Please try again.');

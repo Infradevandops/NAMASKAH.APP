@@ -9,9 +9,9 @@
 [![Security](https://img.shields.io/badge/security-hardened-brightgreen.svg)](#security)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Production-ready enterprise communication platform** that revolutionizes how developers and tech companies handle SMS verification, real-time messaging, voice/video calls, and AI-powered automation.
+**Production-ready enterprise communication platform** with comprehensive SMS verification, real-time messaging, AI assistance, multi-tenant architecture, and advanced billing systems.
 
-> **🎯 For Developers & Tech Industry**: Namaskah.App eliminates the complexity of building communication infrastructure. Deploy enterprise-grade SMS verification, real-time chat, voice/video calls, and AI automation in minutes, not months. Save 6+ months of development time and focus on your core product.
+> **🎯 Current Version: 1.6.0** - Full-featured platform with 25+ API endpoints, React frontend, PostgreSQL database, webhook integrations, and enterprise-grade security.
 
 ---
 
@@ -41,10 +41,13 @@
 
 ```bash
 # Clone and setup
-git clone https://github.com/Infradevandops/CUMAPP.git
+git clone https://github.com/yourusername/Namaskah.git
 cd Namaskah
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+
+# Initialize database
+python -c "from core.database import create_tables; create_tables()"
 
 # Start development server
 uvicorn main:app --reload
@@ -57,44 +60,47 @@ open http://localhost:8000
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ Current System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        CumApp Platform                          │
+│                    Namaskah.App Platform                        │
 ├─────────────────┬─────────────────┬─────────────────────────────┤
-│   Web Frontend  │  Mobile Apps    │      Admin Dashboard        │
-│   React + PWA   │  React Native   │     Management Portal       │
+│   React Frontend│  Admin Portal   │      API Documentation     │
+│   PWA + SPA     │  Management UI  │     Interactive Docs        │
 └─────────────────┴─────────────────┴─────────────────────────────┘
                               │
 ┌─────────────────────────────────────────────────────────────────┐
-│                     API Gateway Layer                          │
-│  FastAPI + WebSocket + GraphQL + REST + Rate Limiting          │
+│                     FastAPI Application                        │
+│  25+ API Endpoints • WebSocket • Middleware • Security         │
 └─────────────────────────────────────────────────────────────────┘
                               │
 ┌─────────────────┬─────────────────┬─────────────────────────────┤
-│  Core Services  │  AI Services    │    External Integrations   │
-│  • Auth & Users │  • Groq AI      │    • TextVerified (SMS)     │
-│  • SMS/Voice    │  • OpenAI       │    • Twilio (Voice/SMS)     │
-│  • Chat Engine  │  • Claude       │    • Stripe (Payments)      │
-│  • Billing      │  • Embeddings   │    • OAuth Providers        │
+│  Core Services  │  AI & Analytics │    External Integrations   │
+│  • Authentication│ • Groq AI      │    • TextVerified (SMS)     │
+│  • Verification │  • Conversation │    • Twilio (Voice/SMS)     │
+│  • Communication│  • Smart Routing│    • Stripe (Payments)      │
+│  • Billing      │  • Performance  │    • Webhook Callbacks      │
+│  • Multi-Tenant │  • Monitoring   │    • RBAC & Security        │
 └─────────────────┴─────────────────┴─────────────────────────────┘
                               │
 ┌─────────────────┬─────────────────┬─────────────────────────────┤
-│   Data Layer    │   Cache Layer   │      Infrastructure        │
-│  PostgreSQL     │  Redis Cluster  │    Docker + Kubernetes      │
-│  Vector DB      │  Session Store  │    AWS/GCP/Azure Ready      │
-│  Time Series    │  Rate Limiting  │    CI/CD + Monitoring       │
+│   Data Layer    │   Infrastructure│      Deployment             │
+│  PostgreSQL/    │  Docker Ready   │    Render/Railway/Heroku    │
+│  SQLite         │  Alembic        │    Environment Configs      │
+│  Redis Cache    │  Sentry         │    Health Monitoring        │
 └─────────────────┴─────────────────┴─────────────────────────────┘
 ```
 
-### 🎯 **Platform Vision**
-**Namaskah.App** is designed as a **universal communication hub** that grows from SMS verification to a complete enterprise communication suite:
+### 🎯 **Current Implementation Status**
+**Namaskah.App v1.6.0** includes comprehensive features across all major areas:
 
-1. **Phase 1** (Current): SMS Verification + Basic Chat
-2. **Phase 2**: AI-Powered Messaging + Real-time Features  
-3. **Phase 3**: Voice Calls + Video + Team Collaboration
-4. **Phase 4**: Enterprise Suite + Multi-tenant SaaS
+✅ **Authentication & Security**: JWT, RBAC, multi-tenant architecture  
+✅ **Communication**: SMS verification, real-time chat, WebSocket support  
+✅ **AI Integration**: Groq AI assistant, conversation intelligence  
+✅ **Billing & Payments**: Multi-gateway support, subscription management  
+✅ **Enterprise Features**: Admin portal, performance monitoring, webhooks  
+✅ **Frontend**: React SPA with 50+ components, PWA capabilities
 
 ---
 
@@ -163,72 +169,80 @@ token = csrf_protection.generate_token(session_id)
 
 ---
 
-## 📁 Project Structure
+## 📁 Current Project Structure
 
 ```
-cumapp/
-├── 🎯 Core Platform
-│   ├── main.py                 # FastAPI application entry point
+Namaskah/
+├── 🎯 Core Application
+│   ├── main.py                 # FastAPI app with 25+ API routers
 │   ├── core/                   # Core platform modules
-│   │   ├── database.py         # Database connection & models
-│   │   ├── middleware.py       # Security & request middleware
-│   │   ├── security.py         # Authentication & authorization
+│   │   ├── database.py         # PostgreSQL/SQLite connection
+│   │   ├── middleware.py       # Security & CORS middleware
+│   │   ├── security.py         # JWT & authentication
+│   │   ├── sentry_config.py    # Error tracking
 │   │   └── exceptions.py       # Custom exception handling
-│   └── models/                 # Data models & schemas
-│       ├── user_models.py      # User & authentication models
-│       ├── message_models.py   # Communication models
-│       └── billing_models.py   # Subscription & billing models
+│   └── models/                 # SQLAlchemy data models
+│       ├── user_models.py      # User & authentication
+│       ├── verification_models.py # SMS verification
+│       ├── conversation_models.py # Chat & messaging
+│       ├── tenant_models.py    # Multi-tenant support
+│       └── enhanced_models.py  # Advanced features
 │
-├── 🌐 API Layer
-│   └── api/                    # REST API endpoints
-│       ├── auth_api.py         # Authentication endpoints
-│       ├── communication_api.py # Messaging & chat endpoints
-│       ├── verification_api.py  # SMS verification endpoints
-│       ├── payment_api.py      # Billing & subscription endpoints
-│       └── admin_api.py        # Administrative endpoints
+├── 🌐 API Layer (25+ Endpoints)
+│   └── api/                    # Comprehensive REST APIs
+│       ├── auth_api.py         # Authentication & JWT
+│       ├── verification_api.py # SMS verification
+│       ├── communication_api.py # Real-time messaging
+│       ├── ai_assistant_api.py # Groq AI integration
+│       ├── billing_api.py      # Payment & subscriptions
+│       ├── admin_api.py        # Administrative functions
+│       ├── tenant_api.py       # Multi-tenant management
+│       ├── webhook_api.py      # External service callbacks
+│       ├── websocket_api.py    # Real-time connections
+│       └── performance_api.py  # Monitoring & analytics
 │
 ├── 🔧 Business Logic
-│   └── services/               # Business logic & integrations
-│       ├── auth_service.py     # User management & authentication
-│       ├── sms_service.py      # SMS & verification logic
-│       ├── ai_service.py       # AI integration & processing
-│       ├── billing_service.py  # Payment & subscription logic
-│       └── notification_service.py # Push notifications & alerts
+│   └── services/               # Service layer implementations
+│       ├── auth_service.py     # User management
+│       ├── verification_service.py # SMS & verification
+│       ├── ai_assistant_service.py # AI conversation
+│       ├── billing_service.py  # Payment processing
+│       ├── webhook_security.py # Webhook verification
+│       └── websocket_manager.py # Real-time connections
 │
-├── 🎨 Frontend
-│   └── frontend/               # React application
-│       ├── src/
-│       │   ├── components/     # Reusable UI components
-│       │   │   ├── atoms/      # Basic UI elements
-│       │   │   ├── molecules/  # Composite components
-│       │   │   ├── organisms/  # Complex UI sections
-│       │   │   └── pages/      # Full page components
-│       │   ├── hooks/          # Custom React hooks
-│       │   ├── contexts/       # React context providers
-│       │   ├── utils/          # Utility functions
-│       │   └── services/       # API communication
-│       └── public/             # Static assets
+├── 🎨 Frontend (React SPA)
+│   └── frontend/               # Modern React application
+│       ├── src/components/     # 50+ React components
+│       │   ├── atoms/          # Basic UI elements
+│       │   ├── molecules/      # Composite components
+│       │   ├── organisms/      # Complex sections
+│       │   └── pages/          # Full page components
+│       ├── hooks/              # Custom React hooks
+│       ├── contexts/           # State management
+│       └── utils/              # Utility functions
+│
+├── 🗄️ Database & Migration
+│   ├── alembic/                # Database migrations
+│   │   └── versions/           # Migration scripts
+│   ├── namaskah.db            # SQLite (development)
+│   └── scripts/               # Database utilities
 │
 ├── 🧪 Testing & Quality
-│   ├── tests/                  # Test suites
-│   │   ├── unit/              # Unit tests
-│   │   ├── integration/       # Integration tests
-│   │   └── e2e/               # End-to-end tests
-│   └── scripts/               # Utility scripts
-│       ├── deployment_check.py # Deployment validation
-│       └── setup_database.py  # Database initialization
+│   ├── tests/                  # Comprehensive test suite
+│   │   ├── test_*.py          # Backend API tests
+│   │   └── conftest.py        # Test configuration
+│   └── frontend/src/__tests__/ # Frontend component tests
 │
-├── 🚀 DevOps & Deployment
-│   ├── .github/workflows/     # GitHub Actions CI/CD
-│   ├── .circleci/            # CircleCI configuration
-│   ├── docker/               # Docker configurations
-│   ├── k8s/                  # Kubernetes manifests
-│   └── terraform/            # Infrastructure as code
+├── 🚀 Deployment & DevOps
+│   ├── Dockerfile             # Container configuration
+│   ├── render.yaml            # Render deployment
+│   ├── requirements.txt       # Python dependencies
+│   └── .env.example          # Environment template
 │
 └── 📚 Documentation
-    ├── docs/                 # Comprehensive documentation
-    ├── api-docs/            # API documentation
-    └── deployment/          # Deployment guides
+    ├── docs/                  # Project documentation
+    ├── README.md             # This file
+    └── *.md                  # Feature guides
 ```
 
 ---
@@ -308,55 +322,88 @@ git push heroku main
 - **[Roadmap](docs/ROADMAP.md)** - Future plans and development timeline
 - **[API Documentation](http://localhost:8000/docs)** - Interactive API docs (when running)
 
-## 📚 API Documentation
+## 📚 API Documentation (25+ Endpoints)
 
-### 🏥 **System Endpoints**
+### 🏥 **System & Health**
 ```http
 GET  /health              # System health check
-GET  /docs                # Interactive API documentation  
-GET  /api/info            # Platform information
+GET  /docs                # Interactive API documentation
+GET  /test-sentry         # Error tracking test
 ```
 
-### 🔐 **Authentication**
+### 🔐 **Authentication & Security**
 ```http
 POST /api/auth/register   # User registration
 POST /api/auth/login      # User login
 POST /api/auth/refresh    # Token refresh
-GET  /api/auth/me         # Current user info
+GET  /api/auth/me         # Current user profile
 ```
 
-### 📱 **SMS & Communication**
+### 📱 **SMS Verification**
 ```http
-POST /api/sms/send                    # Send SMS
-GET  /api/conversations               # Get conversations
-POST /api/conversations/{id}/messages # Send message
-GET  /api/conversations/{id}/messages # Get messages
-```
-
-### 🔍 **Verification Services**
-```http
-POST /api/verification/create         # Create verification
-GET  /api/verification/{id}/number    # Get temp number
-GET  /api/verification/{id}/messages  # Get SMS codes
-GET  /api/verification/{id}/status    # Check status
+POST /api/verification/create         # Create verification session
+GET  /api/verification/{id}/number    # Get temporary number
+GET  /api/verification/{id}/messages  # Retrieve SMS codes
+GET  /api/verification/{id}/status    # Check verification status
 DELETE /api/verification/{id}         # Cancel verification
 ```
 
-### 🤖 **AI Features**
+### 💬 **Communication & Chat**
 ```http
-POST /api/ai/suggest-response         # Get AI suggestions
-POST /api/ai/analyze-intent          # Analyze message
+GET  /api/conversations               # List conversations
+POST /api/conversations               # Create conversation
+GET  /api/conversations/{id}/messages # Get messages
+POST /api/conversations/{id}/messages # Send message
+WS   /ws/chat/{conversation_id}       # WebSocket connection
+```
+
+### 🤖 **AI Assistant**
+```http
+POST /api/ai/chat                     # AI conversation
+POST /api/ai/suggest-response         # Response suggestions
+POST /api/ai/analyze-intent          # Message analysis
 GET  /api/ai/help/{service}          # Contextual help
 ```
 
-### 📞 **Phone Management**
+### 💳 **Billing & Payments**
+```http
+GET  /api/payments/methods            # Payment methods
+POST /api/payments/create-intent      # Create payment
+GET  /api/payments/history            # Payment history
+POST /api/payments/webhooks           # Payment webhooks
+```
+
+### 🏢 **Multi-Tenant & RBAC**
+```http
+GET  /api/tenants                     # List tenants
+POST /api/tenants                     # Create tenant
+GET  /api/rbac/roles                  # User roles
+POST /api/rbac/permissions            # Manage permissions
+```
+
+### 📞 **Phone Numbers & Calls**
 ```http
 GET  /api/numbers/available/{country} # Available numbers
 POST /api/numbers/purchase            # Purchase number
-GET  /api/numbers/owned               # User's numbers
+GET  /api/calls/history               # Call history
+POST /api/calls/initiate              # Start call
 ```
 
-**📖 Full Documentation**: Visit `/docs` when server is running
+### 🔗 **Webhooks & Integration**
+```http
+POST /api/webhooks/textverified       # TextVerified callbacks
+POST /api/webhooks/stripe             # Stripe payment events
+POST /api/webhooks/sms                # SMS delivery status
+```
+
+### 📊 **Performance & Analytics**
+```http
+GET  /api/performance/metrics         # System metrics
+GET  /api/performance/usage           # Usage statistics
+GET  /api/performance/health          # Detailed health check
+```
+
+**📖 Full Interactive Documentation**: Visit `/docs` when server is running
 
 ---
 
@@ -656,54 +703,63 @@ MIT License - see [LICENSE](LICENSE) file
 
 ---
 
-## 🎯 Development Roadmap
+## 🎯 Current Status & Roadmap
 
-### ✅ **Phase 1: Foundation (v1.0-1.1)** - **COMPLETED**
-- **Core Platform**: FastAPI backend with PostgreSQL database
-- **Modern Frontend**: React 18 with component-based architecture
-- **Security Hardened**: CSP headers, input sanitization, authentication
-- **SMS Integration**: TextVerified + Twilio with 100+ service support
-- **Performance Optimized**: Lazy loading, caching, compression
-- **CI/CD Pipeline**: Automated testing and deployment
-- **Docker Ready**: Containerized deployment with orchestration
+### ✅ **Version 1.6.0 - PRODUCTION READY** ✅
 
-### ✅ **Phase 2: Enhanced Billing & Intelligence (v1.2-1.5)** - **COMPLETED**
-- **Advanced Billing System**: Prorated billing, usage monitoring, forecasting
-- **Multi-Gateway Payments**: Stripe, Razorpay, Flutterwave, Paystack with regional optimization
-- **PostgreSQL Migration**: Production-ready database with performance optimization
-- **Enhanced APIs**: Comprehensive billing endpoints with real-time features
-- **Usage Analytics**: ML-based forecasting and cost optimization
-- **Notification System**: Billing alerts, usage thresholds, payment notifications
+**🏗️ Core Infrastructure**
+- ✅ FastAPI application with 25+ API endpoints
+- ✅ PostgreSQL/SQLite database with Alembic migrations
+- ✅ React SPA frontend with 50+ components
+- ✅ Docker containerization and cloud deployment
+- ✅ Comprehensive error handling and logging
+- ✅ Sentry integration for production monitoring
 
-### ✅ **Phase 2.5: Webhook Integration (v1.6)** - **COMPLETED**
-- **Webhook Infrastructure**: Complete webhook system for external service callbacks
-- **TextVerified Integration**: Real-time SMS processing with automatic code extraction
-- **Payment Webhooks**: Stripe, Razorpay webhook handlers for payment confirmations
-- **Security Layer**: Webhook signature verification and IP whitelisting
-- **Event Processing**: Automated notification system for verification events
+**🔐 Authentication & Security**
+- ✅ JWT-based authentication system
+- ✅ Role-based access control (RBAC)
+- ✅ Multi-tenant architecture support
+- ✅ Security middleware and CORS protection
+- ✅ Webhook signature verification
+- ✅ Input validation and sanitization
 
-### 🔮 **Phase 3: Enterprise & Scale (v2.0-2.5)** - **PLANNED Q2 2025**
-- **Multi-Tenant SaaS**: Isolated environments for organizations
-- **Enterprise SSO**: SAML, OAuth2, Active Directory integration
-- **Advanced AI**: Custom model training, conversation automation
-- **Global Infrastructure**: Multi-region deployment with CDN
-- **Compliance Suite**: GDPR, HIPAA, SOC2 certification
-- **API Marketplace**: Third-party integrations and plugins
+**📱 Communication Features**
+- ✅ SMS verification with TextVerified/Twilio
+- ✅ Real-time chat with WebSocket support
+- ✅ Voice call integration
+- ✅ Conversation management and history
+- ✅ Message threading and reactions
+- ✅ File sharing and media support
 
-### 🌟 **Phase 4: Platform Ecosystem (v3.0+)** - **VISION 2026**
-- **Native Mobile Apps**: iOS/Android with full feature parity
-- **Video Conferencing**: Built-in video calls and screen sharing
-- **Workflow Automation**: No-code automation builder
-- **AI Marketplace**: Custom AI models and integrations
-- **White-label Solutions**: Customizable platform for resellers
-- **Global Expansion**: Localization for 50+ countries and languages
+**🤖 AI & Intelligence**
+- ✅ Groq AI assistant integration
+- ✅ Conversation intelligence and suggestions
+- ✅ Intent analysis and sentiment detection
+- ✅ Smart routing and cost optimization
+- ✅ Automated response generation
 
-### 📊 **Success Metrics & Goals**
-- **Performance**: <100ms API response times, 99.9% uptime
-- **Scale**: Support 1M+ concurrent users, 10B+ messages/month
-- **Security**: Zero critical vulnerabilities, SOC2 Type II compliance
-- **User Experience**: <3 second page loads, 95%+ user satisfaction
-- **Business**: $10M ARR by 2026, 1000+ enterprise customers
+**💳 Billing & Payments**
+- ✅ Multi-gateway payment processing
+- ✅ Subscription management
+- ✅ Usage tracking and billing
+- ✅ Invoice generation and history
+- ✅ Payment webhook handling
+
+**🏢 Enterprise Features**
+- ✅ Admin dashboard and management
+- ✅ Performance monitoring and analytics
+- ✅ API key management
+- ✅ Tenant isolation and management
+- ✅ Advanced search and filtering
+- ✅ Data export and reporting
+
+### 🔮 **Next Phase: v2.0 - Advanced Enterprise**
+- 🔄 Enhanced mobile responsiveness
+- 🔄 Advanced analytics dashboard
+- 🔄 Custom AI model training
+- 🔄 Video conferencing integration
+- 🔄 Workflow automation builder
+- 🔄 Third-party marketplace integrations
 
 ---
 
@@ -860,4 +916,61 @@ Namaskah.App provides a **unified communication platform** that scales from simp
 
 ---
 
-*Last Updated: December 2024 | Version: 1.1.0 | License: MIT*
+*Last Updated: January 2025 | Version: 1.6.0 | License: MIT*
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.11+
+- Node.js 18+ (for frontend development)
+- PostgreSQL (production) or SQLite (development)
+
+### Development Setup
+```bash
+# 1. Clone repository
+git clone https://github.com/yourusername/Namaskah.git
+cd Namaskah
+
+# 2. Backend setup
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+# 3. Database initialization
+python -c "from core.database import create_tables; create_tables()"
+
+# 4. Frontend setup (optional)
+cd frontend
+npm install
+npm run build
+cd ..
+
+# 5. Start development server
+uvicorn main:app --reload
+```
+
+### Production Deployment
+```bash
+# Using Docker
+docker build -t namaskah-app .
+docker run -p 8000:8000 namaskah-app
+
+# Using Render (recommended)
+# Push to GitHub and connect to Render
+# Uses included render.yaml configuration
+```
+
+### Environment Configuration
+```bash
+# Copy example environment file
+cp .env.example .env
+
+# Configure required variables
+JWT_SECRET_KEY=your-secret-key
+DATABASE_URL=postgresql://user:pass@localhost/namaskah
+TEXTVERIFIED_API_KEY=your-textverified-key
+TWILIO_ACCOUNT_SID=your-twilio-sid
+GROQ_API_KEY=your-groq-key
+```

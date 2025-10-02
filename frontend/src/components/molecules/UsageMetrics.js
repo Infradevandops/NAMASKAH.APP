@@ -108,7 +108,7 @@ const UsageMetrics = ({
     users: 5.00 // $5.00 per user per month
   };
 
-  const metrics = [
+  const metrics = useMemo(() => [
     {
       key: 'sms',
       name: 'SMS Messages',
@@ -145,7 +145,7 @@ const UsageMetrics = ({
       unit: 'calls',
       cost: calculateCost(currentUsage.apiCalls, unitCosts.apiCalls)
     }
-  ];
+  ], [currentUsage, currentPlan]);
 
   const totalMonthlyCost = metrics.reduce((sum, metric) => sum + parseFloat(metric.cost), 0);
 

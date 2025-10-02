@@ -148,7 +148,7 @@ const SubscriptionPlans = ({
             className={`relative bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow ${
               plan.popular ? 'border-blue-500 ring-2 ring-blue-500 ring-opacity-20' : 'border-gray-200'
             } ${
-              currentPlan === planKey ? 'bg-blue-50 border-blue-300' : ''
+              selectedPlan === planKey ? 'bg-blue-50 border-blue-300' : ''
             }`}
           >
             {/* Popular Badge */}

@@ -37,7 +37,7 @@ export const NotificationProvider = ({ children }) => {
     }
 
     return id;
-  }, []);
+  }, [removeNotification]);
 
   // Remove a notification
   const removeNotification = useCallback((id) => {
