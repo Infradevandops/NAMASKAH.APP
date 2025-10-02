@@ -175,13 +175,13 @@ const LandingPage = () => {
       </section>
 
       {/* Features Section */}
-      <section className={`py-16 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Typography variant="h2" className={`text-3xl font-bold mb-4 ${darkMode ? 'text-white' : 'text-black'}`}>
+            <Typography variant="h2" className="text-3xl font-bold mb-4 text-black">
               Everything You Need in One Platform
             </Typography>
-            <Typography className={`text-xl max-w-2xl mx-auto ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <Typography className="text-xl max-w-2xl mx-auto text-gray-600">
               From SMS verification to enterprise communication suite - 
               Namaskah.App grows with your business needs.
             </Typography>
@@ -189,12 +189,12 @@ const LandingPage = () => {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className={`p-6 text-center hover:shadow-lg transition-shadow ${darkMode ? 'bg-gray-800 text-white' : ''}`}>
+              <Card key={index} className="p-6 text-center hover:shadow-lg transition-shadow">
                 <div className="text-4xl mb-4">{feature.icon}</div>
                 <Typography variant="h3" className="text-xl font-semibold mb-3">
                   {feature.title}
                 </Typography>
-                <Typography className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                <Typography className="text-gray-600">
                   {feature.description}
                 </Typography>
               </Card>
