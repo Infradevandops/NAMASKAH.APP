@@ -252,145 +252,38 @@ class ServiceErrorHandler:
         """Get comprehensive error handling statistics"""
         stats = {
             "service_name": self.service_name,
-            "error_stats": self.error_reporter.get_error_stats(),
+            "error_reporter": self.error_reporter.get_error_stats(),
         }
-
+        
         if self.retry_handler:
             stats["retry_stats"] = self.retry_handler.get_stats()
-
+            
         if self.circuit_breaker:
             stats["circuit_breaker_stats"] = self.circuit_breaker.get_stats()
-
+            
         return stats
 
 
-class ErrorHandlerManager:
-    """Manages error handlers for different services"""
-
-    def __init__(self):
-        self.handlers: Dict[str, ServiceErrorHandler] = {}
-
-    def get_handler(
-        self, service_name: str, config: Optional[ErrorHandlerConfig] = None
-    ) -> ServiceErrorHandler:
-        """Get or create an error handler for a service"""
-        if service_name not in self.handlers:
-            if config is None:
-                config = ErrorHandlerConfig(service_name=service_name)
-            self.handlers[service_name] = ServiceErrorHandler(config)
-
-        return self.handlers[service_name]
-
-    def get_all_stats(self) -> Dict[str, Dict[str, Any]]:
-        """Get statistics for all error handlers"""
-        return {name: handler.get_stats() for name, handler in self.handlers.items()}
+# Global error handler instances
+error_handlers = {}
 
 
-# Global error handler manager
-error_manager = ErrorHandlerManager()
+def get_error_handler(service_name: str, config: Optional[ErrorHandlerConfig] = None) -> ServiceErrorHandler:
+    """Get or create error handler for a service"""
+    if service_name not in error_handlers:
+        if not config:
+            config = ErrorHandlerConfig(service_name=service_name)
+        error_handlers[service_name] = ServiceErrorHandler(config)
+    return error_handlers[service_name]
 
 
-def with_error_handling(
-    service_name: str,
-    operation_name: Optional[str] = None,
-    enable_retry: bool = True,
-    enable_circuit_breaker: bool = True,
-    enable_error_reporting: bool = True,
-):
-    """
-    Decorator to add comprehensive error handling to functions
-
-    Args:
-        service_name: Name of the service
-        operation_name: Name of the operation (defaults to function name)
-        enable_retry: Whether to enable retry logic
-        enable_circuit_breaker: Whether to enable circuit breaker
-        enable_error_reporting: Whether to enable error reporting
-    """
-
+def error_handler(service_name: str, operation_name: Optional[str] = None):
+    """Decorator for automatic error handling"""
     def decorator(func):
-        config = ErrorHandlerConfig(
-            service_name=service_name,
-            enable_retry=enable_retry,
-            enable_circuit_breaker=enable_circuit_breaker,
-            enable_error_reporting=enable_error_reporting,
-        )
-        handler = error_manager.get_handler(service_name, config)
-        op_name = operation_name or func.__name__
-
         @wraps(func)
-        async def async_wrapper(*args, **kwargs):
-            return await handler.execute_with_error_handling(
-                func, op_name, *args, **kwargs
-            )
-
-        @wraps(func)
-        def sync_wrapper(*args, **kwargs):
-            # For sync functions, we need to run in an event loop
-            try:
-                loop = asyncio.get_event_loop()
-            except RuntimeError:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-
-            return loop.run_until_complete(
-                handler.execute_with_error_handling(func, op_name, *args, **kwargs)
-            )
-
-        # Return appropriate wrapper based on function type
-        if asyncio.iscoroutinefunction(func):
-            return async_wrapper
-        else:
-            return sync_wrapper
-
+        async def wrapper(*args, **kwargs):
+            handler = get_error_handler(service_name)
+            op_name = operation_name or func.__name__
+            return await handler.execute_with_error_handling(func, op_name, *args, **kwargs)
+        return wrapper
     return decorator
-
-
-# Convenience decorators for specific services
-def textverified_error_handling(operation_name: Optional[str] = None):
-    """Error handling decorator for TextVerified operations"""
-    return with_error_handling("textverified", operation_name)
-
-
-def twilio_error_handling(operation_name: Optional[str] = None):
-    """Error handling decorator for Twilio operations"""
-    return with_error_handling("twilio", operation_name)
-
-
-def database_error_handling(operation_name: Optional[str] = None):
-    """Error handling decorator for database operations"""
-    return with_error_handling("database", operation_name)
-
-
-def ai_service_error_handling(operation_name: Optional[str] = None):
-    """Error handling decorator for AI service operations"""
-    return with_error_handling("ai_service", operation_name)
-
-
-def handle_errors(func):
-    """
-    General error handling decorator for WebRTC operations
-
-    Args:
-        func: Function to wrap with error handling
-
-    Returns:
-        Wrapped function with error handling
-    """
-    return with_error_handling("webrtc", func.__name__)(func)
-
-
-# Health check function
-async def get_error_handling_health() -> Dict[str, Any]:
-    """Get health status of all error handling components"""
-    stats = error_manager.get_all_stats()
-    circuit_stats = circuit_manager.get_all_stats()
-    unhealthy_services = circuit_manager.get_unhealthy_services()
-
-    return {
-        "healthy": len(unhealthy_services) == 0,
-        "unhealthy_services": unhealthy_services,
-        "error_handler_stats": stats,
-        "circuit_breaker_stats": circuit_stats,
-        "timestamp": datetime.utcnow().isoformat(),
-    }
