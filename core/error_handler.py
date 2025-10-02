@@ -367,6 +367,19 @@ def ai_service_error_handling(operation_name: Optional[str] = None):
     return with_error_handling("ai_service", operation_name)
 
 
+def handle_errors(func):
+    """
+    General error handling decorator for WebRTC operations
+
+    Args:
+        func: Function to wrap with error handling
+
+    Returns:
+        Wrapped function with error handling
+    """
+    return with_error_handling("webrtc", func.__name__)(func)
+
+
 # Health check function
 async def get_error_handling_health() -> Dict[str, Any]:
     """Get health status of all error handling components"""
