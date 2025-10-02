@@ -1,15 +1,29 @@
+#!/usr/bin/env python3
+"""
+Tenant Models for Namaskah Platform
+
+This module defines SQLAlchemy models for multi-tenant architecture,
+including tenant management, user associations, settings, and invitations.
+"""
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from core.database import Base
 
+
 class Tenant(Base):
+    """
+    Multi-tenant organization entity.
+
+    Represents a separate organization or workspace with isolated data and users.
+    """
+
     __tablename__ = "tenants"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String(100), unique=True, index=True, nullable=False)
     description = Column(Text, nullable=True)
-    domain = Column(String, unique=True, index=True, nullable=True)  # For subdomain routing
+    domain = Column(String(100), unique=True, index=True, nullable=True)  # For subdomain routing
     is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
@@ -22,12 +36,18 @@ class Tenant(Base):
         return f"<Tenant(id={self.id}, name='{self.name}', domain='{self.domain}')>"
 
 class TenantUser(Base):
+    """
+    Association between users and tenants.
+
+    Links users to tenants with specific roles within each tenant.
+    """
+
     __tablename__ = "tenant_users"
 
     id = Column(Integer, primary_key=True, index=True)
-    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    role = Column(String, nullable=False, default="member")  # member, admin, owner
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    role = Column(String(50), nullable=False, default="member")  # member, admin, owner
     is_active = Column(Boolean, default=True, nullable=False)
     invited_at = Column(DateTime(timezone=True), server_default=func.now())
     joined_at = Column(DateTime(timezone=True), nullable=True)
@@ -44,10 +64,16 @@ class TenantUser(Base):
         return f"<TenantUser(tenant_id={self.tenant_id}, user_id={self.user_id}, role='{self.role}')>"
 
 class TenantSettings(Base):
+    """
+    Configuration settings for each tenant.
+
+    Stores tenant-specific settings, limits, branding, and feature flags.
+    """
+
     __tablename__ = "tenant_settings"
 
     id = Column(Integer, primary_key=True, index=True)
-    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, unique=True)
+    tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, unique=True, index=True)
 
     # Feature flags
     enable_verification = Column(Boolean, default=True, nullable=False)
@@ -61,9 +87,9 @@ class TenantSettings(Base):
     max_concurrent_calls = Column(Integer, default=1, nullable=False)
 
     # Branding
-    logo_url = Column(String, nullable=True)
-    primary_color = Column(String, default="#3b82f6", nullable=False)
-    company_name = Column(String, nullable=True)
+    logo_url = Column(String(500), nullable=True)
+    primary_color = Column(String(7), default="#3b82f6", nullable=False)  # Hex color code
+    company_name = Column(String(100), nullable=True)
 
     # Security settings
     require_mfa = Column(Boolean, default=False, nullable=False)

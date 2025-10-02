@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 """
-Phone Number Models for CumApp Platform
+Phone Number Models for Namaskah Platform
+
+This module defines SQLAlchemy models for phone number management, including
+available numbers, ownership, usage tracking, and related API models.
 """
 import enum
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
-from sqlalchemy import (Boolean, Column, DateTime, Enum, ForeignKey, Index,
+from sqlalchemy import (Boolean, CheckConstraint, Column, DateTime, Enum, ForeignKey, Index,
                         Integer, Numeric, String, Text)
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from core.database import Base
 
 
 # Enums
-class PhoneNumberStatus(enum.Enum):
+class PhoneNumberStatus(str, enum.Enum):
+    """Enumeration of phone number statuses"""
     AVAILABLE = "available"
     PURCHASED = "purchased"
     ACTIVE = "active"
@@ -26,13 +31,15 @@ class PhoneNumberStatus(enum.Enum):
     CANCELLED = "cancelled"
 
 
-class PhoneNumberProvider(enum.Enum):
+class PhoneNumberProvider(str, enum.Enum):
+    """Enumeration of phone number providers"""
     TWILIO = "twilio"
     TEXTVERIFIED = "textverified"
     MOCK = "mock"  # For development/testing
 
 
-class PhoneNumberCapability(enum.Enum):
+class PhoneNumberCapability(str, enum.Enum):
+    """Enumeration of phone number capabilities"""
     SMS = "sms"
     VOICE = "voice"
     MMS = "mms"
@@ -41,55 +48,19 @@ class PhoneNumberCapability(enum.Enum):
 
 # SQLAlchemy Models
 class PhoneNumber(Base):
-    """Phone numbers available for purchase or owned by users"""
+    """
+    Phone numbers available for purchase or owned by users.
+
+    Manages phone number inventory, ownership, pricing, capabilities, and usage tracking.
+    """
 
     __tablename__ = "phone_numbers"
-
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    phone_number = Column(String(20), unique=True, nullable=False, index=True)
-
-    # Provider information
-    provider = Column(Enum(PhoneNumberProvider), nullable=False)
-    provider_id = Column(String)  # Provider's internal ID
-    country_code = Column(String(3), nullable=False)
-    area_code = Column(String(10))
-    region = Column(String(100))
-
-    # Ownership and status
-    owner_id = Column(String, ForeignKey("users.id"))
-    status = Column(Enum(PhoneNumberStatus), default=PhoneNumberStatus.AVAILABLE)
-
-    # Pricing
-    monthly_cost = Column(Numeric(10, 2))  # Monthly subscription cost
-    sms_cost_per_message = Column(Numeric(10, 4))  # Cost per SMS
-    voice_cost_per_minute = Column(Numeric(10, 4))  # Cost per voice minute
-    setup_fee = Column(Numeric(10, 2), default=0)
-
-    # Capabilities
-    capabilities = Column(Text)  # JSON array of capabilities
-
-    # Usage tracking
-    total_sms_sent = Column(Integer, default=0)
-    total_sms_received = Column(Integer, default=0)
-    total_voice_minutes = Column(Integer, default=0)
-    monthly_sms_sent = Column(Integer, default=0)
-    monthly_voice_minutes = Column(Integer, default=0)
-
-    # Subscription details
-    purchased_at = Column(DateTime)
-    expires_at = Column(DateTime)
-    auto_renew = Column(Boolean, default=True)
-    last_renewal_at = Column(DateTime)
-
-    # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    # Relationships
-    owner = relationship("User", back_populates="phone_numbers")
-
-    # Indexes for performance
     __table_args__ = (
+        CheckConstraint('total_sms_sent >= 0', name='check_total_sms_sent_non_negative'),
+        CheckConstraint('total_sms_received >= 0', name='check_total_sms_received_non_negative'),
+        CheckConstraint('total_voice_minutes >= 0', name='check_total_voice_minutes_non_negative'),
+        CheckConstraint('monthly_sms_sent >= 0', name='check_monthly_sms_sent_non_negative'),
+        CheckConstraint('monthly_voice_minutes >= 0', name='check_monthly_voice_minutes_non_negative'),
         Index("idx_phone_number_status", "status"),
         Index("idx_phone_number_country", "country_code"),
         Index("idx_phone_number_owner", "owner_id"),
@@ -98,43 +69,100 @@ class PhoneNumber(Base):
         {"extend_existing": True},
     )
 
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    phone_number = Column(String(20), unique=True, nullable=False, index=True)
 
-class PhoneNumberUsage(Base):
-    """Daily usage tracking for phone numbers"""
+    # Provider information
+    provider = Column(Enum(PhoneNumberProvider), nullable=False)
+    provider_id = Column(String(255))  # Provider's internal ID
+    country_code = Column(String(3), nullable=False)
+    area_code = Column(String(10))
+    region = Column(String(100))
 
-    __tablename__ = "phone_number_usage"
+    # Ownership and status
+    owner_id = Column(String(36), ForeignKey("users.id"))
+    status = Column(Enum(PhoneNumberStatus), default=PhoneNumberStatus.AVAILABLE, nullable=False)
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    phone_number_id = Column(String, ForeignKey("phone_numbers.id"), nullable=False)
-    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    # Pricing
+    monthly_cost = Column(Numeric(10, 2))  # Monthly subscription cost
+    sms_cost_per_message = Column(Numeric(10, 4))  # Cost per SMS
+    voice_cost_per_minute = Column(Numeric(10, 4))  # Cost per voice minute
+    setup_fee = Column(Numeric(10, 2), default=0, nullable=False)
 
-    # Usage date
-    usage_date = Column(DateTime, nullable=False, index=True)
+    # Capabilities
+    capabilities = Column(Text)  # JSON array of capabilities
 
-    # Usage metrics
-    sms_sent = Column(Integer, default=0)
-    sms_received = Column(Integer, default=0)
-    voice_minutes = Column(Integer, default=0)
+    # Usage tracking
+    total_sms_sent = Column(Integer, default=0, nullable=False)
+    total_sms_received = Column(Integer, default=0, nullable=False)
+    total_voice_minutes = Column(Integer, default=0, nullable=False)
+    monthly_sms_sent = Column(Integer, default=0, nullable=False)
+    monthly_voice_minutes = Column(Integer, default=0, nullable=False)
 
-    # Costs
-    sms_cost = Column(Numeric(10, 4), default=0)
-    voice_cost = Column(Numeric(10, 4), default=0)
-    total_cost = Column(Numeric(10, 4), default=0)
+    # Subscription details
+    purchased_at = Column(DateTime(timezone=True))
+    expires_at = Column(DateTime(timezone=True))
+    auto_renew = Column(Boolean, default=True, nullable=False)
+    last_renewal_at = Column(DateTime(timezone=True))
 
     # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    # Relationships
+    owner = relationship("User", back_populates="phone_numbers")
+
+    def __repr__(self):
+        return f"<PhoneNumber(id='{self.id}', number='{self.phone_number}', status={self.status.value}, provider={self.provider.value})>"
+
+
+class PhoneNumberUsage(Base):
+    """
+    Daily usage tracking for phone numbers.
+
+    Records daily usage metrics and costs for billing and analytics purposes.
+    """
+
+    __tablename__ = "phone_number_usage"
+    __table_args__ = (
+        CheckConstraint('sms_sent >= 0', name='check_sms_sent_non_negative'),
+        CheckConstraint('sms_received >= 0', name='check_sms_received_non_negative'),
+        CheckConstraint('voice_minutes >= 0', name='check_voice_minutes_non_negative'),
+        CheckConstraint('sms_cost >= 0', name='check_sms_cost_non_negative'),
+        CheckConstraint('voice_cost >= 0', name='check_voice_cost_non_negative'),
+        CheckConstraint('total_cost >= 0', name='check_total_cost_non_negative'),
+        Index("idx_usage_phone_date", "phone_number_id", "usage_date"),
+        Index("idx_usage_user_date", "user_id", "usage_date"),
+        {"extend_existing": True},
+    )
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    phone_number_id = Column(String(36), ForeignKey("phone_numbers.id"), nullable=False, index=True)
+    user_id = Column(String(36), ForeignKey("users.id"), nullable=False, index=True)
+
+    # Usage date
+    usage_date = Column(DateTime(timezone=True), nullable=False, index=True)
+
+    # Usage metrics
+    sms_sent = Column(Integer, default=0, nullable=False)
+    sms_received = Column(Integer, default=0, nullable=False)
+    voice_minutes = Column(Integer, default=0, nullable=False)
+
+    # Costs
+    sms_cost = Column(Numeric(10, 4), default=0, nullable=False)
+    voice_cost = Column(Numeric(10, 4), default=0, nullable=False)
+    total_cost = Column(Numeric(10, 4), default=0, nullable=False)
+
+    # Metadata
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationships
     phone_number = relationship("PhoneNumber")
     user = relationship("User")
 
-    # Indexes
-    __table_args__ = (
-        Index("idx_usage_phone_date", "phone_number_id", "usage_date"),
-        Index("idx_usage_user_date", "user_id", "usage_date"),
-        {"extend_existing": True},
-    )
+    def __repr__(self):
+        return f"<PhoneNumberUsage(id='{self.id}', phone_number_id='{self.phone_number_id}', date='{self.usage_date}', total_cost={self.total_cost})>"
 
 
 # Pydantic Models for API

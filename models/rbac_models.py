@@ -1,14 +1,28 @@
+#!/usr/bin/env python3
+"""
+RBAC (Role-Based Access Control) Models for Namaskah Platform
+
+This module defines SQLAlchemy models for role-based access control,
+including roles, permissions, role assignments, and audit logging.
+"""
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, DateTime, Text, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from core.database import Base
 
+
 class Role(Base):
+    """
+    User roles within a tenant.
+
+    Roles define sets of permissions that can be assigned to users.
+    """
+
     __tablename__ = "roles"
 
     id = Column(Integer, primary_key=True, index=True)
     tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
-    name = Column(String, nullable=False, index=True)
+    name = Column(String(100), nullable=False, index=True)
     description = Column(Text, nullable=True)
     is_system_role = Column(Boolean, default=False, nullable=False)  # Built-in roles that can't be deleted
     is_active = Column(Boolean, default=True, nullable=False)
@@ -28,13 +42,19 @@ class Role(Base):
         return f"<Role(id={self.id}, tenant_id={self.tenant_id}, name='{self.name}')>"
 
 class Permission(Base):
+    """
+    Individual permissions that can be granted to roles.
+
+    Permissions define specific actions that can be performed on resources.
+    """
+
     __tablename__ = "permissions"
 
     id = Column(Integer, primary_key=True, index=True)
     tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
-    name = Column(String, nullable=False, index=True)  # e.g., "tenant.create", "user.manage"
-    resource = Column(String, nullable=False, index=True)  # e.g., "tenant", "user", "verification"
-    action = Column(String, nullable=False)  # e.g., "create", "read", "update", "delete", "manage"
+    name = Column(String(200), nullable=False, index=True)  # e.g., "tenant.create", "user.manage"
+    resource = Column(String(100), nullable=False, index=True)  # e.g., "tenant", "user", "verification"
+    action = Column(String(50), nullable=False)  # e.g., "create", "read", "update", "delete", "manage"
     description = Column(Text, nullable=True)
     is_system_permission = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -51,6 +71,12 @@ class Permission(Base):
         return f"<Permission(id={self.id}, tenant_id={self.tenant_id}, name='{self.name}')>"
 
 class RolePermission(Base):
+    """
+    Association between roles and permissions.
+
+    Links roles to their assigned permissions within a tenant.
+    """
+
     __tablename__ = "role_permissions"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -74,6 +100,12 @@ class RolePermission(Base):
         return f"<RolePermission(role_id={self.role_id}, permission_id={self.permission_id})>"
 
 class UserRole(Base):
+    """
+    Assignment of roles to users within a tenant.
+
+    Tracks which users have which roles, including assignment metadata.
+    """
+
     __tablename__ = "user_roles"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -99,18 +131,23 @@ class UserRole(Base):
         return f"<UserRole(tenant_id={self.tenant_id}, user_id={self.user_id}, role_id={self.role_id})>"
 
 class PermissionAuditLog(Base):
-    """Audit log for permission changes"""
+    """
+    Audit log for permission-related changes.
+
+    Tracks all changes to roles, permissions, and user role assignments for compliance.
+    """
+
     __tablename__ = "permission_audit_logs"
 
     id = Column(Integer, primary_key=True, index=True)
     tenant_id = Column(Integer, ForeignKey("tenants.id"), nullable=False, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # User who made the change
-    action = Column(String, nullable=False)  # create, update, delete
-    resource_type = Column(String, nullable=False)  # role, permission, user_role
+    action = Column(String(50), nullable=False)  # create, update, delete
+    resource_type = Column(String(50), nullable=False)  # role, permission, user_role
     resource_id = Column(Integer, nullable=False)  # ID of the affected resource
     old_values = Column(Text, nullable=True)  # JSON of old values
     new_values = Column(Text, nullable=True)  # JSON of new values
-    ip_address = Column(String, nullable=True)
+    ip_address = Column(String(45), nullable=True)  # IPv6 addresses can be up to 45 chars
     user_agent = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

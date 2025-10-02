@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
 """
-Subscription Models for CumApp Communication Platform
-Enhanced models for subscription management, billing, and usage tracking
+Subscription Models for Namaskah Communication Platform
+
+Enhanced models for subscription management, billing, and usage tracking.
 """
 import enum
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 from decimal import Decimal
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, validator
-from sqlalchemy import (JSON, Boolean, Column, DateTime, Enum, ForeignKey,
+from sqlalchemy import (JSON, Boolean, CheckConstraint, Column, DateTime, Enum, ForeignKey,
                         Index, Integer, Numeric, String, Text)
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from core.database import Base
 
 
 # Enums
-class SubscriptionPlan(enum.Enum):
+class SubscriptionPlan(str, enum.Enum):
+    """Enumeration of available subscription plans"""
     FREE = "free"
     BASIC = "basic"
     STANDARD = "standard"
@@ -26,7 +29,8 @@ class SubscriptionPlan(enum.Enum):
     ENTERPRISE = "enterprise"
 
 
-class SubscriptionStatus(enum.Enum):
+class SubscriptionStatus(str, enum.Enum):
+    """Enumeration of subscription statuses"""
     ACTIVE = "active"
     CANCELLED = "cancelled"
     EXPIRED = "expired"
@@ -34,13 +38,15 @@ class SubscriptionStatus(enum.Enum):
     PENDING = "pending"
 
 
-class BillingCycle(enum.Enum):
+class BillingCycle(str, enum.Enum):
+    """Enumeration of billing cycle options"""
     MONTHLY = "monthly"
     QUARTERLY = "quarterly"
     YEARLY = "yearly"
 
 
-class PaymentStatus(enum.Enum):
+class PaymentStatus(str, enum.Enum):
+    """Enumeration of payment statuses"""
     PENDING = "pending"
     COMPLETED = "completed"
     FAILED = "failed"
@@ -48,7 +54,8 @@ class PaymentStatus(enum.Enum):
     CANCELLED = "cancelled"
 
 
-class UsageType(enum.Enum):
+class UsageType(str, enum.Enum):
+    """Enumeration of usage types for billing"""
     SMS_SENT = "sms_sent"
     SMS_RECEIVED = "sms_received"
     VOICE_MINUTES = "voice_minutes"
@@ -59,11 +66,21 @@ class UsageType(enum.Enum):
 
 # SQLAlchemy Models
 class SubscriptionPlanConfig(Base):
-    """Configuration for subscription plans"""
+    """
+    Configuration for subscription plans.
+
+    Defines pricing, limits, features, and metadata for subscription plans.
+    """
 
     __tablename__ = "subscription_plan_configs"
+    __table_args__ = (
+        Index("idx_plan_name", "plan_name"),
+        Index("idx_plan_active", "is_active"),
+        Index("idx_plan_sort", "sort_order"),
+        {"extend_existing": True},
+    )
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     plan_name = Column(Enum(SubscriptionPlan), unique=True, nullable=False)
     display_name = Column(String(100), nullable=False)
     description = Column(Text)
@@ -74,42 +91,34 @@ class SubscriptionPlanConfig(Base):
     yearly_price = Column(Numeric(10, 2))
 
     # Limits and features
-    monthly_sms_limit = Column(Integer, default=0)  # 0 = unlimited
-    monthly_voice_minutes_limit = Column(Integer, default=0)
-    monthly_verification_limit = Column(Integer, default=0)
-    max_phone_numbers = Column(Integer, default=1)
-    api_rate_limit = Column(Integer, default=1000)  # Requests per hour
+    monthly_sms_limit = Column(Integer, default=0, nullable=False)  # 0 = unlimited
+    monthly_voice_minutes_limit = Column(Integer, default=0, nullable=False)
+    monthly_verification_limit = Column(Integer, default=0, nullable=False)
+    max_phone_numbers = Column(Integer, default=1, nullable=False)
+    api_rate_limit = Column(Integer, default=1000, nullable=False)  # Requests per hour
 
     # Features
     features = Column(JSON)  # List of included features
-    smart_routing_enabled = Column(Boolean, default=False)
-    ai_assistant_enabled = Column(Boolean, default=False)
-    priority_support = Column(Boolean, default=False)
-    analytics_enabled = Column(Boolean, default=False)
+    smart_routing_enabled = Column(Boolean, default=False, nullable=False)
+    ai_assistant_enabled = Column(Boolean, default=False, nullable=False)
+    priority_support = Column(Boolean, default=False, nullable=False)
+    analytics_enabled = Column(Boolean, default=False, nullable=False)
 
     # Overage pricing
-    sms_overage_rate = Column(Numeric(10, 4), default=0.01)
-    voice_overage_rate = Column(Numeric(10, 4), default=0.02)
-    verification_overage_rate = Column(Numeric(10, 4), default=0.05)
+    sms_overage_rate = Column(Numeric(10, 4), default=0.01, nullable=False)
+    voice_overage_rate = Column(Numeric(10, 4), default=0.02, nullable=False)
+    verification_overage_rate = Column(Numeric(10, 4), default=0.05, nullable=False)
 
     # Plan metadata
-    is_active = Column(Boolean, default=True)
-    sort_order = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True, nullable=False)
+    sort_order = Column(Integer, default=0, nullable=False)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationships
     subscriptions = relationship("UserSubscription", back_populates="plan_config")
-
-    # Indexes
-    __table_args__ = (
-        Index("idx_plan_name", "plan_name"),
-        Index("idx_plan_active", "is_active"),
-        Index("idx_plan_sort", "sort_order"),
-        {"extend_existing": True},
-    )
 
 
 class UserSubscription(Base):

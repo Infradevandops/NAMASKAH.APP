@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
 """
-Verification Models for CumApp Communication Platform
-Enhanced models for TextVerified integration and verification management
+Verification Models for Namaskah Communication Platform
+
+Enhanced models for TextVerified integration and verification management.
 """
 import enum
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 from decimal import Decimal
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, validator
-from sqlalchemy import (JSON, Boolean, Column, DateTime, Enum, ForeignKey,
+from sqlalchemy import (JSON, Boolean, CheckConstraint, Column, DateTime, Enum, ForeignKey,
                         Index, Integer, Numeric, String, Text)
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from core.database import Base
 
 
 # Enums
-class VerificationStatus(enum.Enum):
+class VerificationStatus(str, enum.Enum):
+    """Enumeration of verification request statuses"""
     PENDING = "pending"
     ACTIVE = "active"
     COMPLETED = "completed"
@@ -27,13 +30,15 @@ class VerificationStatus(enum.Enum):
     CANCELLED = "cancelled"
 
 
-class VerificationProvider(enum.Enum):
+class VerificationProvider(str, enum.Enum):
+    """Enumeration of verification service providers"""
     TEXTVERIFIED = "textverified"
     TWILIO = "twilio"
     MOCK = "mock"
 
 
-class ServiceCategory(enum.Enum):
+class ServiceCategory(str, enum.Enum):
+    """Enumeration of service categories"""
     SOCIAL = "social"
     MESSAGING = "messaging"
     TECH = "tech"
@@ -45,26 +50,37 @@ class ServiceCategory(enum.Enum):
 
 # SQLAlchemy Models
 class VerificationService(Base):
-    """Supported verification services configuration"""
+    """
+    Supported verification services configuration.
+
+    Defines available verification services, pricing, and metadata.
+    """
 
     __tablename__ = "verification_services"
+    __table_args__ = (
+        Index("idx_service_name", "service_name"),
+        Index("idx_service_category", "category"),
+        Index("idx_service_active", "is_active"),
+        Index("idx_service_provider", "provider"),
+        {"extend_existing": True},
+    )
 
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     service_name = Column(String(100), unique=True, nullable=False, index=True)
     display_name = Column(String(200), nullable=False)
     category = Column(Enum(ServiceCategory), nullable=False)
 
     # Service configuration
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=True, nullable=False)
     provider = Column(
-        Enum(VerificationProvider), default=VerificationProvider.TEXTVERIFIED
+        Enum(VerificationProvider), default=VerificationProvider.TEXTVERIFIED, nullable=False
     )
     provider_service_id = Column(String(100))  # Provider's internal service ID
 
     # Pricing and limits
-    base_cost = Column(Numeric(10, 4), default=0)
-    success_rate = Column(Numeric(5, 4), default=0.95)  # Expected success rate
-    average_delivery_time = Column(Integer, default=30)  # Seconds
+    base_cost = Column(Numeric(10, 4), default=0, nullable=False)
+    success_rate = Column(Numeric(5, 4), default=0.95, nullable=False)  # Expected success rate
+    average_delivery_time = Column(Integer, default=30, nullable=False)  # Seconds
 
     # Service metadata
     description = Column(Text)
@@ -74,24 +90,15 @@ class VerificationService(Base):
 
     # Code patterns for extraction
     code_patterns = Column(JSON)  # Regex patterns for code extraction
-    typical_code_length = Column(Integer, default=6)
+    typical_code_length = Column(Integer, default=6, nullable=False)
 
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     # Relationships
     verification_requests = relationship(
         "VerificationRequest", back_populates="service"
-    )
-
-    # Indexes
-    __table_args__ = (
-        Index("idx_service_name", "service_name"),
-        Index("idx_service_category", "category"),
-        Index("idx_service_active", "is_active"),
-        Index("idx_service_provider", "provider"),
-        {"extend_existing": True},
     )
 
 
