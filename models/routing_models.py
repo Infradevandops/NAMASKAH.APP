@@ -95,7 +95,7 @@ class ConversationIntelligence(Base):
     )
 
     id = Column(Integer, primary_key=True, index=True)
-    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False, index=True)
+    conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False)
     sentiment_score = Column(Float, nullable=True)
     intent = Column(String(100), nullable=True)
     keywords = Column(Text, nullable=True)  # JSON string
