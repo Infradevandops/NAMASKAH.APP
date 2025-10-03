@@ -1,0 +1,10 @@
+# Minimal requirements for basic functionality
+fastapi==0.109.1
+uvicorn==0.23.2
+python-dotenv==1.0.0
+sqlalchemy==2.0.43
+alembic==1.12.1
+pydantic==2.12.0a1
+python-jose[cryptography]==3.4.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1

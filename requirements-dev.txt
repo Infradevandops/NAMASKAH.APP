@@ -42,5 +42,4 @@ requests==2.32.4
 # Environment management
 python-dotenv==1.0.0
 
-# Type checking
-types-all==1.0.0
+

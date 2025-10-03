@@ -1,0 +1,26 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy only essential files
+COPY requirements.txt .
+COPY main.py .
+COPY core/ ./core/
+COPY api/ ./api/
+COPY models/ ./models/
+COPY services/ ./services/
+COPY auth/ ./auth/
+COPY clients/ ./clients/
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Set environment variables
+ENV JWT_SECRET_KEY=docker_default_secret_change_in_production
+ENV DATABASE_URL=sqlite:///./app.db
+ENV USE_MOCK_TWILIO=true
+ENV DEBUG=false
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
