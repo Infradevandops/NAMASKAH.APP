@@ -81,7 +81,7 @@ jobs:
         bandit -r . -f json -o bandit-report.json || true
 
     - name: Upload Bandit results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: bandit-report
         path: bandit-report.json
@@ -235,7 +235,7 @@ jobs:
         safety check --output json > safety-report.json || true
 
     - name: Upload Safety results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: safety-report
         path: safety-report.json
@@ -376,7 +376,7 @@ jobs:
         "
 
     - name: Upload API docs
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: api-docs
         path: api-docs.json
