@@ -6,6 +6,7 @@ import logging
 import os
 import asyncio
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Response, HTTPException
@@ -62,6 +63,21 @@ templates = Jinja2Templates(directory="templates")
 
 async def lifespan(app: FastAPI):
     """Initialize database and check connections on startup"""
+    
+    # Validate environment first
+    logger.info("Validating environment...")
+    from core.env_validator import validate_environment, setup_environment_defaults
+    
+    setup_environment_defaults()
+    is_valid, errors = validate_environment()
+    
+    if not is_valid:
+        error_msg = "Environment validation failed:\n" + "\n".join(errors)
+        logger.error(error_msg)
+        raise RuntimeError(error_msg)
+    
+    logger.info("✅ Environment validation passed")
+    
     logger.info("Initializing Sentry...")
     init_sentry()
 
@@ -74,9 +90,19 @@ async def lifespan(app: FastAPI):
         raise RuntimeError("Database connection failed")
 
     try:
-        # Run blocking IO in a separate thread
-        await asyncio.to_thread(create_tables)
-        logger.info("Database initialization completed successfully")
+        # Run safe table creation with validation
+        from core.migration_validator import safe_create_tables
+        success, messages = await asyncio.to_thread(safe_create_tables)
+        
+        if not success:
+            error_msg = "Database initialization failed: " + "; ".join(messages)
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+        
+        for message in messages:
+            logger.info(message)
+            
+        logger.info("✅ Database initialization completed successfully")
     except Exception as e:
         logger.error(f"Database initialization failed: {e}")
         raise
@@ -147,18 +173,29 @@ async def test_sentry_error():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint for monitoring."""
+    """Basic health check endpoint for monitoring."""
     try:
         unified_client = get_unified_client()
         
         # Check frontend build status
         frontend_status = "available" if react_build_exists else "missing"
         
+        from core.env_validator import get_environment_status
+        env_status = get_environment_status()
+        
+        # Determine overall health
+        is_healthy = (
+            check_database_connection() and
+            len(env_status.get("critical", {})) > 0 and
+            all(v.get("present", False) for v in env_status.get("critical", {}).values())
+        )
+        
         return {
-            "status": "healthy",
+            "status": "healthy" if is_healthy else "degraded",
             "app_name": "Namaskah.App",
             "version": "1.6.0",
             "database": check_database_connection(),
+            "environment": env_status,
             "frontend": {
                 "build_status": frontend_status,
                 "build_exists": react_build_exists,
@@ -177,6 +214,87 @@ async def health_check():
             "app_name": "Namaskah.App",
             "version": "1.6.0",
             "error": str(e),
+        }
+
+
+@app.get("/health/detailed")
+async def detailed_health_check():
+    """Detailed health check with comprehensive system status."""
+    try:
+        from core.env_validator import get_environment_status
+        from core.migration_validator import get_database_health
+        
+        unified_client = get_unified_client()
+        env_status = get_environment_status()
+        db_health = get_database_health()
+        
+        # System resource check
+        import psutil
+        system_info = {
+            "memory_percent": psutil.virtual_memory().percent,
+            "cpu_percent": psutil.cpu_percent(interval=1),
+            "disk_percent": psutil.disk_usage('/').percent if os.path.exists('/') else 0
+        }
+        
+        # Overall health determination
+        critical_issues = (
+            db_health.get("issues", []) +
+            [f"Missing {k}" for k, v in env_status.get("critical", {}).items() if not v.get("present")]
+        )
+        
+        overall_status = "healthy"
+        if critical_issues:
+            overall_status = "unhealthy"
+        elif env_status.get("degraded_features"):
+            overall_status = "degraded"
+        
+        return {
+            "status": overall_status,
+            "timestamp": datetime.utcnow().isoformat(),
+            "app_info": {
+                "name": "Namaskah.App",
+                "version": "1.6.0",
+                "environment": os.getenv("ENVIRONMENT", "development")
+            },
+            "database": db_health,
+            "environment": env_status,
+            "system": system_info,
+            "services": {
+                "twilio": {
+                    "available": unified_client.twilio_client is not None,
+                    "mock_mode": os.getenv("USE_MOCK_TWILIO", "false").lower() == "true"
+                },
+                "textverified": {
+                    "available": unified_client.textverified_client is not None,
+                    "mock_mode": os.getenv("USE_MOCK_TEXTVERIFIED", "false").lower() == "true"
+                },
+                "groq": {
+                    "available": unified_client.groq_client is not None,
+                    "api_key_present": bool(os.getenv("GROQ_API_KEY"))
+                },
+                "sentry": {
+                    "enabled": bool(os.getenv("SENTRY_DSN"))
+                }
+            },
+            "frontend": {
+                "build_exists": react_build_exists,
+                "static_files": os.path.exists("frontend/build/static") if react_build_exists else False,
+                "status": "available" if react_build_exists else "missing"
+            },
+            "critical_issues": critical_issues,
+            "warnings": env_status.get("degraded_features", [])
+        }
+        
+    except Exception as e:
+        logger.error(f"Detailed health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "error": str(e),
+            "app_info": {
+                "name": "Namaskah.App",
+                "version": "1.6.0"
+            }
         }
 
 

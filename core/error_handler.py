@@ -321,4 +321,39 @@ def error_handler(service_name: str, operation_name: Optional[str] = None):
             op_name = operation_name or func.__name__
             return await handler.execute_with_error_handling(func, op_name, *args, **kwargs)
         return wrapper
+    return decoratorrvice_name,
+            "error_reporter": self.error_reporter.get_error_stats(),
+        }
+        
+        if self.retry_handler:
+            stats["retry_stats"] = self.retry_handler.get_stats()
+            
+        if self.circuit_breaker:
+            stats["circuit_breaker_stats"] = self.circuit_breaker.get_stats()
+            
+        return stats
+
+
+# Global error handler instances
+error_handlers = {}
+
+
+def get_error_handler(service_name: str, config: Optional[ErrorHandlerConfig] = None) -> ServiceErrorHandler:
+    """Get or create error handler for a service"""
+    if service_name not in error_handlers:
+        if not config:
+            config = ErrorHandlerConfig(service_name=service_name)
+        error_handlers[service_name] = ServiceErrorHandler(config)
+    return error_handlers[service_name]
+
+
+def error_handler(service_name: str, operation_name: Optional[str] = None):
+    """Decorator for automatic error handling"""
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            handler = get_error_handler(service_name)
+            op_name = operation_name or func.__name__
+            return await handler.execute_with_error_handling(func, op_name, *args, **kwargs)
+        return wrapper
     return decorator
