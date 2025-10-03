@@ -30,14 +30,14 @@ locust==2.15.1
 radon==6.0.1
 xenon==0.9.1
 
-# API testing
-requests==2.32.4
-
 # Database testing
-psycopg2-binary==2.9.7
+psycopg2-binary==2.9.9
 
 # Redis testing
 redis==5.0.1
+
+# API testing
+requests==2.32.4
 
 # Environment management
 python-dotenv==1.0.0
