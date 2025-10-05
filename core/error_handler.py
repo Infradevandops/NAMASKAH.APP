@@ -1,4 +1,4 @@
-T^}#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Comprehensive Error Handler for CumApp Communication Platform
 Combines retry logic, circuit breakers, and error reporting for robust error handling
