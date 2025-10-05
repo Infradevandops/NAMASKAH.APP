@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    ports:
+      - "8000:8000"
+    environment:
+      - JWT_SECRET_KEY=simple_docker_secret_key_change_in_production
+      - DATABASE_URL=sqlite:///./app.db
+      - USE_MOCK_TWILIO=true
+      - USE_MOCK_TEXTVERIFIED=true
+      - DEBUG=false
+      - ENVIRONMENT=docker
+    volumes:
+      - ./data:/app/data  # Persist database
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

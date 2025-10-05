@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+T^}#!/usr/bin/env python3
 """
 Comprehensive Error Handler for CumApp Communication Platform
 Combines retry logic, circuit breakers, and error reporting for robust error handling
@@ -96,8 +96,27 @@ class ErrorReporter:
                 exc_info=True,
             )
 
-        # TODO: Add integration with monitoring systems (Sentry, DataDog, etc.)
-        # await self._send_to_monitoring_system(error_record)
+        # Send to monitoring systems
+        await self._send_to_monitoring_system(error_record)
+
+    async def _send_to_monitoring_system(self, error_record: Dict[str, Any]) -> None:
+        """
+        Send error record to monitoring systems (Sentry, DataDog, etc.)
+
+        This is a placeholder for monitoring integration.
+        Implement actual monitoring calls here.
+        """
+        # Placeholder for monitoring integration
+        # Examples:
+        # - Sentry: sentry_sdk.capture_exception(error_record)
+        # - DataDog: datadog_api.Event.create(title="Error", text=str(error_record))
+        # - Custom monitoring service
+
+        # For now, just log that monitoring would be called
+        logger.debug(f"Monitoring integration placeholder: {error_record}")
+
+        # TODO: Implement actual monitoring system integration
+        pass
 
     def get_error_stats(self) -> Dict[str, Any]:
         """Get error statistics"""
@@ -183,6 +202,69 @@ class ServiceErrorHandler:
 
         return error
 
+    def _build_execution_context(
+        self, operation_name: str, args: tuple, kwargs: dict
+    ) -> Dict[str, Any]:
+        """Build context information for error reporting"""
+        return {
+            "service": self.service_name,
+            "operation": operation_name,
+            "args_count": len(args),
+            "kwargs_keys": list(kwargs.keys()),
+        }
+
+    def _create_protected_function(
+        self, func: Callable, operation_name: str, args: tuple, kwargs: dict
+    ) -> Callable:
+        """Create a protected function combining retry and circuit breaker logic"""
+        if self.retry_handler:
+            # Combine circuit breaker with retry
+            async def protected_func():
+                return await self.retry_handler.execute_with_retry(
+                    func, *args, operation_name=operation_name, **kwargs
+                )
+            return protected_func
+        else:
+            # Circuit breaker only
+            return func
+
+    async def _execute_with_protection(
+        self, func: Callable, operation_name: str, *args, **kwargs
+    ) -> Any:
+        """Execute function with appropriate protection mechanisms"""
+        if self.circuit_breaker:
+            protected_func = self._create_protected_function(func, operation_name, args, kwargs)
+            result = await self.circuit_breaker.call(protected_func, *args, **kwargs)
+        elif self.retry_handler:
+            # Retry only
+            result = await self.retry_handler.execute_with_retry(
+                func, *args, operation_name=operation_name, **kwargs
+            )
+        else:
+            # No protection, direct execution
+            if asyncio.iscoroutinefunction(func):
+                result = await func(*args, **kwargs)
+            else:
+                result = func(*args, **kwargs)
+
+        return result
+
+    async def _handle_execution_error(
+        self, error: Exception, operation_name: str, context: Dict[str, Any]
+    ) -> None:
+        """Handle execution errors by mapping and reporting"""
+        # Map to service-specific exception
+        mapped_error = self._map_exception(error)
+
+        # Report error if enabled
+        if self.config.enable_error_reporting:
+            await self.error_reporter.report_error(
+                mapped_error, self.service_name, operation_name, context
+            )
+
+        # Re-raise the mapped exception
+        raise mapped_error
+
     async def execute_with_error_handling(
         self, func: Callable, operation_name: str, *args, **kwargs
     ) -> Any:
@@ -198,55 +280,13 @@ class ServiceErrorHandler:
         Returns:
             Function result
         """
-        context = {
-            "service": self.service_name,
-            "operation": operation_name,
-            "args_count": len(args),
-            "kwargs_keys": list(kwargs.keys()),
-        }
+        context = self._build_execution_context(operation_name, args, kwargs)
 
         try:
-            # Execute with circuit breaker if enabled
-            if self.circuit_breaker:
-                if self.retry_handler:
-                    # Combine circuit breaker with retry
-                    async def protected_func():
-                        return await self.retry_handler.execute_with_retry(
-                            func, *args, operation_name=operation_name, **kwargs
-                        )
-
-                    result = await self.circuit_breaker.call(protected_func)
-                else:
-                    # Circuit breaker only
-                    result = await self.circuit_breaker.call(func, *args, **kwargs)
-
-            elif self.retry_handler:
-                # Retry only
-                result = await self.retry_handler.execute_with_retry(
-                    func, *args, operation_name=operation_name, **kwargs
-                )
-
-            else:
-                # No protection, direct execution
-                if asyncio.iscoroutinefunction(func):
-                    result = await func(*args, **kwargs)
-                else:
-                    result = func(*args, **kwargs)
-
+            result = await self._execute_with_protection(func, operation_name, *args, **kwargs)
             return result
-
         except Exception as e:
-            # Map to service-specific exception
-            mapped_error = self._map_exception(e)
-
-            # Report error if enabled
-            if self.config.enable_error_reporting:
-                await self.error_reporter.report_error(
-                    mapped_error, self.service_name, operation_name, context
-                )
-
-            # Re-raise the mapped exception
-            raise mapped_error
+            await self._handle_execution_error(e, operation_name, context)
 
     def get_stats(self) -> Dict[str, Any]:
         """Get comprehensive error handling statistics"""
@@ -286,74 +326,10 @@ def error_handler(service_name: str, operation_name: Optional[str] = None):
             op_name = operation_name or func.__name__
             return await handler.execute_with_error_handling(func, op_name, *args, **kwargs)
         return wrapper
-    return decoratorrvice_name,
-            "error_reporter": self.error_reporter.get_error_stats(),
-        }
-        
-        if self.retry_handler:
-            stats["retry_stats"] = self.retry_handler.get_stats()
-            
-        if self.circuit_breaker:
-            stats["circuit_breaker_stats"] = self.circuit_breaker.get_stats()
-            
-        return stats
-
-
-# Global error handler instances
-error_handlers = {}
-
-
-def get_error_handler(service_name: str, config: Optional[ErrorHandlerConfig] = None) -> ServiceErrorHandler:
-    """Get or create error handler for a service"""
-    if service_name not in error_handlers:
-        if not config:
-            config = ErrorHandlerConfig(service_name=service_name)
-        error_handlers[service_name] = ServiceErrorHandler(config)
-    return error_handlers[service_name]
-
-
-def error_handler(service_name: str, operation_name: Optional[str] = None):
-    """Decorator for automatic error handling"""
-    def decorator(func):
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            handler = get_error_handler(service_name)
-            op_name = operation_name or func.__name__
-            return await handler.execute_with_error_handling(func, op_name, *args, **kwargs)
-        return wrapper
-    return decoratorrvice_name,
-            "error_reporter": self.error_reporter.get_error_stats(),
-        }
-        
-        if self.retry_handler:
-            stats["retry_stats"] = self.retry_handler.get_stats()
-            
-        if self.circuit_breaker:
-            stats["circuit_breaker_stats"] = self.circuit_breaker.get_stats()
-            
-        return stats
-
-
-# Global error handler instances
-error_handlers = {}
-
-
-def get_error_handler(service_name: str, config: Optional[ErrorHandlerConfig] = None) -> ServiceErrorHandler:
-    """Get or create error handler for a service"""
-    if service_name not in error_handlers:
-        if not config:
-            config = ErrorHandlerConfig(service_name=service_name)
-        error_handlers[service_name] = ServiceErrorHandler(config)
-    return error_handlers[service_name]
-
-
-def error_handler(service_name: str, operation_name: Optional[str] = None):
-    """Decorator for automatic error handling"""
-    def decorator(func):
-        @wraps(func)
-        async def wrapper(*args, **kwargs):
-            handler = get_error_handler(service_name)
-            op_name = operation_name or func.__name__
-            return await handler.execute_with_error_handling(func, op_name, *args, **kwargs)
-        return wrapper
     return decorator
+
+
+# Convenience decorator for common error handling patterns
+def with_error_handling(service_name: str, operation_name: Optional[str] = None):
+    """Alias for error_handler decorator"""
+    return error_handler(service_name, operation_name)
