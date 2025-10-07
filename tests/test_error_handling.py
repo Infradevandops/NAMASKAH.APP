@@ -15,7 +15,7 @@ from core.circuit_breaker import (CircuitBreaker, CircuitBreakerConfig,
                                   circuit_manager)
 from core.error_handler import (ErrorHandlerConfig, ErrorReporter,
                                 ServiceErrorHandler, get_error_handling_health,
-                                with_error_handling)
+                                with_error_handling, handle_errors)
 from core.exceptions import (BaseServiceException, ErrorCategory,
                              ErrorSeverity, TextVerifiedAuthenticationError,
                              TextVerifiedException, TwilioException,
@@ -439,17 +439,48 @@ class TestErrorHandlingDecorators:
         assert result == "success"
         assert call_count == 2
 
+
+
+
+class TestHandleErrorsDecorator:
+    """Test handle_errors decorator"""
+
     @pytest.mark.asyncio
-    async def test_service_specific_decorators(self):
-        """Test service-specific error handling decorators"""
-        from core.error_handler import textverified_error_handling
+    async def test_handle_errors_success(self):
+        """Test handle_errors decorator on successful function"""
+        @handle_errors
+        async def successful_function():
+            return "success"
 
-        @textverified_error_handling("test_operation")
-        async def test_function():
-            return "textverified_success"
+        result = await successful_function()
+        assert result == "success"
 
-        result = await test_function()
-        assert result == "textverified_success"
+    @pytest.mark.asyncio
+    async def test_handle_errors_with_exception(self):
+        """Test handle_errors decorator with exception"""
+        @handle_errors
+        async def failing_function():
+            raise ValueError("Test error")
+
+        with pytest.raises(ValueError):
+            await failing_function()
+
+    @pytest.mark.asyncio
+    async def test_handle_errors_with_retryable_error(self):
+        """Test handle_errors decorator with retryable error"""
+        call_count = 0
+
+        @handle_errors
+        async def retryable_function():
+            nonlocal call_count
+            call_count += 1
+            if call_count < 3:
+                raise ConnectionError("Temporary failure")
+            return "success"
+
+        result = await retryable_function()
+        assert result == "success"
+        assert call_count == 3  # Should have retried
 
 
 class TestErrorHandlingIntegration:

@@ -333,3 +333,12 @@ def error_handler(service_name: str, operation_name: Optional[str] = None):
 def with_error_handling(service_name: str, operation_name: Optional[str] = None):
     """Alias for error_handler decorator"""
     return error_handler(service_name, operation_name)
+
+
+def handle_errors(func):
+    """Simple error handling decorator for WebRTC service"""
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        handler = get_error_handler("webrtc")
+        return await handler.execute_with_error_handling(func, func.__name__, *args, **kwargs)
+    return wrapper
