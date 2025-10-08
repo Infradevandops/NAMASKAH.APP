@@ -1,0 +1,58 @@
+# Testing Dependencies for Namaskah.App
+
+# Core testing framework
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+pytest-xdist==3.3.1  # Parallel test execution
+pytest-mock==3.12.0
+pytest-html==4.1.1  # HTML test reports
+
+# HTTP testing
+httpx==0.25.2
+requests-mock==1.11.0
+
+# Database testing
+pytest-postgresql==5.0.0
+pytest-redis==3.0.2
+
+# Performance testing
+pytest-benchmark==4.0.0
+locust==2.17.0  # Load testing
+
+# Security testing
+bandit==1.7.5
+safety==2.3.5
+
+# Code quality
+black==23.11.0
+isort==5.12.0
+flake8==6.1.0
+mypy==1.7.1
+pre-commit==3.5.0
+
+# Type checking
+types-requests==2.31.0.10
+types-redis==4.6.0.11
+
+# Mocking and fixtures
+factory-boy==3.3.0
+faker==20.1.0
+
+# Test utilities
+freezegun==1.2.2  # Time mocking
+responses==0.24.1  # HTTP mocking
+testcontainers==3.7.1  # Container testing
+
+# Coverage and reporting
+coverage==7.3.2
+pytest-json-report==1.5.0
+pytest-metadata==3.0.0
+
+# Performance monitoring
+psutil==5.9.6
+memory-profiler==0.61.0
+
+# Load testing
+aiohttp==3.9.1  # For async load testing
+asyncio-throttle==1.0.2

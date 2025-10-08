@@ -151,22 +151,58 @@ def safe_create_tables() -> Tuple[bool, List[str]]:
                 logger.warning(warning)
                 messages.append(f"WARNING: {warning}")
         
-        # Create tables
-        logger.info("Creating database tables...")
-        Base.metadata.create_all(bind=engine)
+        # Check existing tables
+        inspector = inspect(engine)
+        existing_tables = set(inspector.get_table_names())
+        expected_tables = set(Base.metadata.tables.keys())
+        
+        if existing_tables == expected_tables:
+            messages.append("All tables already exist - skipping creation")
+            logger.info("✅ Database already initialized - all tables present")
+            return True, messages
+        
+        # Create tables with checkfirst=True to avoid conflicts
+        logger.info("Creating missing database tables...")
+        try:
+            Base.metadata.create_all(bind=engine, checkfirst=True)
+        except SQLAlchemyError as e:
+            # If we get an index conflict, try to continue
+            if "already exists" in str(e).lower():
+                logger.warning(f"Index conflict detected but continuing: {e}")
+                messages.append(f"WARNING: {str(e)}")
+            else:
+                raise e
         
         # Post-creation validation
         logger.info("Validating table creation...")
-        inspector = inspect(engine)
-        created_tables = inspector.get_table_names()
-        expected_tables = list(Base.metadata.tables.keys())
+        final_tables = set(inspector.get_table_names())
         
-        missing_tables = set(expected_tables) - set(created_tables)
+        # Check if we have all required tables
+        missing_tables = expected_tables - final_tables
         if missing_tables:
-            return False, [f"Failed to create tables: {', '.join(missing_tables)}"]
+            # Try to create missing tables individually
+            for table_name in missing_tables:
+                try:
+                    table = Base.metadata.tables[table_name]
+                    table.create(bind=engine, checkfirst=True)
+                    logger.info(f"Created missing table: {table_name}")
+                except Exception as e:
+                    logger.error(f"Failed to create table {table_name}: {e}")
+                    return False, [f"Failed to create table {table_name}: {str(e)}"]
         
-        messages.append(f"Successfully created {len(created_tables)} tables")
-        logger.info(f"✅ Database initialization completed - {len(created_tables)} tables created")
+        # Final validation
+        final_tables = set(inspector.get_table_names())
+        still_missing = expected_tables - final_tables
+        
+        if still_missing:
+            return False, [f"Failed to create tables: {', '.join(still_missing)}"]
+        
+        created_count = len(final_tables - existing_tables)
+        if created_count > 0:
+            messages.append(f"Successfully created {created_count} new tables")
+        
+        messages.append(f"Database ready with {len(final_tables)} tables")
+        logger.info(f"✅ Database initialization completed - {len(final_tables)} tables available")
         
         return True, messages
         
