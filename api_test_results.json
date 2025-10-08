@@ -1,0 +1,77 @@
+[
+  {
+    "test": "\u2705 Health Check",
+    "message": "Endpoint accessible",
+    "data": {
+      "status": "healthy",
+      "app_name": "Namaskah.App",
+      "version": "1.6.0"
+    },
+    "timestamp": "2025-10-08 21:07:56"
+  },
+  {
+    "test": "\u2705 Registration",
+    "message": "Registration successful",
+    "data": {
+      "message": "User registered successfully",
+      "user_id": "3f9b796b-08ac-4180-8415-853fc7b142cb",
+      "email": "apitest@example.com"
+    },
+    "timestamp": "2025-10-08 21:07:56"
+  },
+  {
+    "test": "\u2705 Login",
+    "message": "Login successful",
+    "data": {
+      "token_type": "bearer",
+      "user_email": "apitest@example.com"
+    },
+    "timestamp": "2025-10-08 21:07:56"
+  },
+  {
+    "test": "\u2705 Protected Endpoint",
+    "message": "Access granted",
+    "data": {
+      "id": "test-user-id",
+      "email": "test@example.com",
+      "username": "testuser",
+      "full_name": "Test User",
+      "role": "user"
+    },
+    "timestamp": "2025-10-08 21:07:56"
+  },
+  {
+    "test": "\u2705 Google OAuth Config",
+    "message": "Config endpoint accessible",
+    "data": {
+      "configured": false,
+      "setup_required": true
+    },
+    "timestamp": "2025-10-08 21:07:56"
+  },
+  {
+    "test": "\u26a0\ufe0f Google OAuth Login",
+    "message": "Not configured but endpoint works",
+    "data": {
+      "error": "Google OAuth not configured",
+      "setup_instructions": [
+        "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET"
+      ]
+    },
+    "timestamp": "2025-10-08 21:07:56"
+  },
+  {
+    "test": "\u2705 API Documentation",
+    "message": "Swagger docs accessible",
+    "data": null,
+    "timestamp": "2025-10-08 21:07:56"
+  },
+  {
+    "test": "\u2705 Invalid Endpoint",
+    "message": "Proper 404 error returned",
+    "data": {
+      "detail": "Not Found"
+    },
+    "timestamp": "2025-10-08 21:07:56"
+  }
+]

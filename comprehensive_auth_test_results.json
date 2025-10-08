@@ -1,0 +1,110 @@
+[
+  {
+    "test": "\u2705 Database Setup",
+    "message": "All tables created successfully",
+    "data": null,
+    "timestamp": "2025-10-08T23:31:08.517435"
+  },
+  {
+    "test": "\u2705 Environment Config",
+    "message": "All configurations checked",
+    "data": {
+      "App Settings": {
+        "APP_NAME": "CUMAPP",
+        "PORT": "8000",
+        "DEBUG": "True"
+      },
+      "JWT Config": {
+        "JWT_SECRET_KEY": "SET",
+        "JWT_ALGORITHM": "HS256",
+        "JWT_EXPIRE_MINUTES": "30"
+      },
+      "Google OAuth": {
+        "GOOGLE_CLIENT_ID": "SET",
+        "GOOGLE_CLIENT_SECRET": "SET",
+        "GOOGLE_REDIRECT_URI": "http://localhost:8000/api/auth/google/callback"
+      },
+      "TextVerified": {
+        "TEXTVERIFIED_API_KEY": "SET",
+        "TEXTVERIFIED_EMAIL": "huff_06psalm@icloud.com"
+      },
+      "Groq AI": {
+        "GROQ_API_KEY": "SET",
+        "GROQ_MODEL": "llama3-8b-8192"
+      }
+    },
+    "timestamp": "2025-10-08T23:31:08.517533"
+  },
+  {
+    "test": "\u2705 Basic Auth Flow",
+    "message": "Complete flow working",
+    "data": {
+      "registration": "success",
+      "login": "success",
+      "token_generation": "success",
+      "token_verification": "success",
+      "user_id": "eb47d5ee-6d7a-4378-9aa3-ba9d2b5de62e"
+    },
+    "timestamp": "2025-10-08T23:31:08.547880"
+  },
+  {
+    "test": "\u2705 Refresh Token System",
+    "message": "Token rotation working",
+    "data": {
+      "original_token_revoked": true,
+      "new_token_created": true,
+      "token_length": 43
+    },
+    "timestamp": "2025-10-08T23:31:08.552299"
+  },
+  {
+    "test": "\u2705 Google OAuth Config",
+    "message": "Fully configured and ready",
+    "data": {
+      "client_id": "11893866195-r9q595mc...",
+      "client_secret": "GOCSPX-***",
+      "redirect_uri": "http://localhost:8000/api/auth/google/callback",
+      "auth_url_generated": true,
+      "auth_url_length": 330
+    },
+    "timestamp": "2025-10-08T23:31:08.552478"
+  },
+  {
+    "test": "\u2705 Security Features",
+    "message": "All security tests passed",
+    "data": {
+      "bcrypt_hashing": true,
+      "sha256_hashing": true,
+      "jwt_generation": true,
+      "jwt_verification": true,
+      "token_blacklisting": true,
+      "bcrypt_hash_length": 60,
+      "jwt_token_length": 161
+    },
+    "timestamp": "2025-10-08T23:31:09.857224"
+  },
+  {
+    "test": "\u2705 API Endpoints Logic",
+    "message": "All endpoint logic tested",
+    "data": {
+      "endpoints": [
+        "/api/auth/register",
+        "/api/auth/login",
+        "/api/auth/me",
+        "/api/auth/v2/refresh",
+        "/api/auth/v2/logout",
+        "/api/auth/google/config",
+        "/api/auth/google/login",
+        "/health"
+      ],
+      "test_results": {
+        "registration_hash": true,
+        "login_token": true,
+        "protected_access": true,
+        "oauth_config": true
+      },
+      "total_endpoints": 8
+    },
+    "timestamp": "2025-10-08T23:31:09.858017"
+  }
+]

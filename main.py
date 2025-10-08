@@ -47,6 +47,8 @@ from api.rbac_api import router as rbac_router
 from api.call_api import router as call_router
 from api.websocket_api import router as websocket_router
 from api.webhook_api import router as webhook_router
+from api.google_oauth_api import router as google_oauth_router
+from api.auth_v2_api import router as auth_v2_router
 from clients.unified_client import get_unified_client
 # Import core components
 from core.database import check_database_connection, create_tables
@@ -153,6 +155,8 @@ app.include_router(rbac_router, prefix="/api/rbac", tags=["rbac"])
 app.include_router(call_router, prefix="/api/calls", tags=["calls"])
 app.include_router(websocket_router, tags=["websocket"])
 app.include_router(webhook_router, tags=["webhooks"])
+app.include_router(google_oauth_router, tags=["google_oauth"])
+app.include_router(auth_v2_router, tags=["auth_v2"])
 
 
 # --- Health Check Endpoint (Define before catch-all) ---

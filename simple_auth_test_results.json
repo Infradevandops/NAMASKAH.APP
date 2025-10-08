@@ -1,0 +1,93 @@
+[
+  {
+    "test": "\u2705 Database Setup",
+    "message": "Database initialized successfully",
+    "data": null,
+    "timestamp": "2025-10-08T21:04:31.885283"
+  },
+  {
+    "test": "\u2705 Password Hashing",
+    "message": "Bcrypt hashing works correctly",
+    "data": {
+      "hash_length": 60,
+      "verification": "passed"
+    },
+    "timestamp": "2025-10-08T21:04:32.977186"
+  },
+  {
+    "test": "\u2705 Simple Hashing",
+    "message": "SHA256 hashing works correctly",
+    "data": {
+      "hash_length": 64,
+      "verification": "passed"
+    },
+    "timestamp": "2025-10-08T21:04:32.977344"
+  },
+  {
+    "test": "\u2705 User Registration",
+    "message": "User registered successfully",
+    "data": {
+      "user_id": "2527ddce-5bce-456e-b999-ef0ff6a32ffe",
+      "email": "testuser@example.com",
+      "username": "testuser"
+    },
+    "timestamp": "2025-10-08T21:04:32.998737"
+  },
+  {
+    "test": "\u2705 User Login",
+    "message": "Login successful",
+    "data": {
+      "user": {
+        "id": "2527ddce-5bce-456e-b999-ef0ff6a32ffe",
+        "email": "testuser@example.com",
+        "username": "testuser",
+        "full_name": "Test User",
+        "role": "user"
+      },
+      "token_generated": true
+    },
+    "timestamp": "2025-10-08T21:04:33.046974"
+  },
+  {
+    "test": "\u2705 Token Verification",
+    "message": "Token verified successfully",
+    "data": {
+      "subject": "testuser@example.com",
+      "token_type": "access",
+      "expires": 1759954773
+    },
+    "timestamp": "2025-10-08T21:04:33.047471"
+  },
+  {
+    "test": "\u2705 Duplicate Registration",
+    "message": "Duplicate email correctly rejected",
+    "data": null,
+    "timestamp": "2025-10-08T21:04:33.049741"
+  },
+  {
+    "test": "\u274c User Login",
+    "message": "User not found",
+    "data": null,
+    "timestamp": "2025-10-08T21:04:33.054732"
+  },
+  {
+    "test": "\u2705 Invalid Login",
+    "message": "Invalid credentials correctly rejected",
+    "data": null,
+    "timestamp": "2025-10-08T21:04:33.054792"
+  },
+  {
+    "test": "\u26a0\ufe0f Google OAuth Setup",
+    "message": "Google OAuth not configured",
+    "data": {
+      "note": "Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables",
+      "setup_instructions": [
+        "1. Go to Google Cloud Console",
+        "2. Create OAuth 2.0 credentials",
+        "3. Set environment variables",
+        "4. Configure redirect URI"
+      ]
+    },
+    "timestamp": "2025-10-08T21:04:33.054854"
+  }
+]

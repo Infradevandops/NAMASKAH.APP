@@ -1,0 +1,76 @@
+[
+  {
+    "test": "\u2705 Database Setup",
+    "message": "Auth 2.0 tables created",
+    "data": null,
+    "timestamp": "2025-10-08T21:49:07.721545"
+  },
+  {
+    "test": "\u2705 Refresh Token Generation",
+    "message": "Token generated and stored",
+    "data": {
+      "token_length": 43,
+      "hash_length": 64,
+      "user_id": "7ffc8413-da42-48b4-99d5-31c5bc380ab5"
+    },
+    "timestamp": "2025-10-08T21:49:07.727823"
+  },
+  {
+    "test": "\u2705 Token Verification",
+    "message": "Token verified successfully",
+    "data": {
+      "user_id": "7ffc8413-da42-48b4-99d5-31c5bc380ab5",
+      "expires_at": "2025-10-15T20:49:07.722183",
+      "is_active": true
+    },
+    "timestamp": "2025-10-08T21:49:07.730513"
+  },
+  {
+    "test": "\u2705 Token Rotation",
+    "message": "Old token revoked, new token created",
+    "data": {
+      "old_token_revoked": true,
+      "new_token_created": true,
+      "new_token_length": 43
+    },
+    "timestamp": "2025-10-08T21:49:07.740076"
+  },
+  {
+    "test": "\u2705 Session Management",
+    "message": "Active sessions retrieved",
+    "data": {
+      "user_id": "7ffc8413-da42-48b4-99d5-31c5bc380ab5",
+      "active_sessions": 1,
+      "sessions": [
+        {
+          "id": "64a300e0-4104-4baa-b32a-0afaa43ccef2",
+          "created_at": "2025-10-08 20:49:07",
+          "expires_at": "2025-10-15T20:49:07.737810",
+          "device_info": {
+            "device": "test_rotated"
+          }
+        }
+      ]
+    },
+    "timestamp": "2025-10-08T21:49:07.744617"
+  },
+  {
+    "test": "\u2705 Token Blacklisting",
+    "message": "Token successfully blacklisted",
+    "data": {
+      "jti": "25eb80ea93b80e7a",
+      "expires_at": "2025-10-08T22:04:07",
+      "reason": "test_blacklist"
+    },
+    "timestamp": "2025-10-08T21:49:07.855703"
+  },
+  {
+    "test": "\u2705 Token Cleanup",
+    "message": "Expired tokens cleaned up",
+    "data": {
+      "refresh_tokens_cleaned": 1,
+      "blacklist_entries_cleaned": 1
+    },
+    "timestamp": "2025-10-08T21:49:07.942509"
+  }
+]
