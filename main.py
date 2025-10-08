@@ -308,8 +308,8 @@ if react_build_exists:
     # Verify static files exist
     static_dir = "frontend/build/static"
     if os.path.exists(static_dir):
-        js_files = len([f for f in os.listdir(f"{static_dir}/js") if f.endswith('.js')])
-        css_files = len([f for f in os.listdir(f"{static_dir}/css") if f.endswith('.css')])
+        js_files = len([f for f in os.listdir(f"{static_dir}/js") if f.endswith('.js')]) if os.path.exists(f"{static_dir}/js") else 0
+        css_files = len([f for f in os.listdir(f"{static_dir}/css") if f.endswith('.css')]) if os.path.exists(f"{static_dir}/css") else 0
         logger.info(f"📁 Static files: {js_files} JS files, {css_files} CSS files")
     else:
         logger.warning("⚠️ Static directory missing")
