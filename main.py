@@ -90,9 +90,9 @@ async def lifespan(app: FastAPI):
         raise RuntimeError("Database connection failed")
 
     try:
-        # Run safe table creation with validation
-        from core.migration_validator import safe_create_tables
-        success, messages = await asyncio.to_thread(safe_create_tables)
+        # Run simple table creation
+        from core.simple_database import simple_create_tables
+        success, messages = await asyncio.to_thread(simple_create_tables)
         
         if not success:
             error_msg = "Database initialization failed: " + "; ".join(messages)

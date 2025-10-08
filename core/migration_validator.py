@@ -190,7 +190,8 @@ def safe_create_tables() -> Tuple[bool, List[str]]:
                     logger.error(f"Failed to create table {table_name}: {e}")
                     return False, [f"Failed to create table {table_name}: {str(e)}"]
         
-        # Final validation
+        # Final validation - refresh inspector
+        inspector = inspect(engine)
         final_tables = set(inspector.get_table_names())
         still_missing = expected_tables - final_tables
         
