@@ -319,7 +319,8 @@ else:
 
 if react_build_exists:
     # Serve static assets (CSS, JS, images)
-    app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
+    if os.path.exists("frontend/build/static"):
+        app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
     
     # Root route - serve React app
     @app.get("/")
@@ -327,6 +328,77 @@ if react_build_exists:
         """Serve React app at root."""
         with open("frontend/build/index.html", "r") as f:
             return HTMLResponse(f.read())
+    
+    # Simple pages
+    @app.get("/login")
+    async def login_page():
+        content = """
+        <h2>Login</h2>
+        <form action="/api/auth/login" method="post">
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p><a href="/register">Don't have an account? Register here</a></p>
+        """
+        return templates.TemplateResponse("simple_pages.html", {
+            "request": {}, "title": "Login", "content": content
+        })
+    
+    @app.get("/register")
+    async def register_page():
+        content = """
+        <h2>Register</h2>
+        <form action="/api/auth/register" method="post">
+            <div class="form-group">
+                <label>Full Name:</label>
+                <input type="text" name="full_name" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">Register</button>
+        </form>
+        <p><a href="/login">Already have an account? Login here</a></p>
+        """
+        return templates.TemplateResponse("simple_pages.html", {
+            "request": {}, "title": "Register", "content": content
+        })
+    
+    @app.get("/dashboard")
+    async def dashboard_page():
+        content = """
+        <h2>Dashboard</h2>
+        <p>Welcome to your dashboard!</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px;">
+            <div style="background: #f3f4f6; padding: 16px; border-radius: 8px;">
+                <h3>SMS Verification</h3>
+                <a href="/api/verification/create" class="btn">Create Verification</a>
+            </div>
+            <div style="background: #f3f4f6; padding: 16px; border-radius: 8px;">
+                <h3>API Testing</h3>
+                <a href="/docs" class="btn">API Docs</a>
+            </div>
+            <div style="background: #f3f4f6; padding: 16px; border-radius: 8px;">
+                <h3>System Health</h3>
+                <a href="/health" class="btn">Health Check</a>
+            </div>
+        </div>
+        """
+        return templates.TemplateResponse("simple_pages.html", {
+            "request": {}, "title": "Dashboard", "content": content
+        })
     
     # Catch-all route for React Router (SPA routing) - MUST be last
     @app.get("/{full_path:path}")
