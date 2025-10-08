@@ -17,6 +17,9 @@ def validate_environment() -> Tuple[bool, List[str]]:
     Returns:
         Tuple of (is_valid, list_of_errors)
     """
+    # Setup defaults first
+    setup_environment_defaults()
+    
     errors = []
     
     # Critical variables - app won't work without these
@@ -116,6 +119,18 @@ def validate_jwt_secret() -> bool:
 
 def setup_environment_defaults():
     """Set up safe defaults for missing optional environment variables"""
+    import secrets
+    
+    # Generate JWT secret if missing (for deployment environments)
+    if not os.getenv("JWT_SECRET_KEY"):
+        jwt_secret = secrets.token_urlsafe(32)
+        os.environ["JWT_SECRET_KEY"] = jwt_secret
+        logger.warning("Generated temporary JWT_SECRET_KEY - set permanent key in production")
+    
+    # Use SQLite if DATABASE_URL missing
+    if not os.getenv("DATABASE_URL"):
+        os.environ["DATABASE_URL"] = "sqlite:///./namaskah.db"
+        logger.info("Using SQLite database (set DATABASE_URL for PostgreSQL)")
     
     defaults = {
         "USE_MOCK_TWILIO": "true",
