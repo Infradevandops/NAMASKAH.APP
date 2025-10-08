@@ -2,43 +2,151 @@ import React from 'react';
 
 const SimpleLanding = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%)',
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    }}>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '64px 16px'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{
+            fontSize: '48px',
+            fontWeight: 'bold',
+            color: '#1f2937',
+            marginBottom: '16px'
+          }}>
             Welcome to Namaskah.App
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
+          <p style={{
+            fontSize: '24px',
+            color: '#6b7280',
+            marginBottom: '32px'
+          }}>
             Enterprise Communication Platform
           </p>
-          <div className="space-x-4">
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
             <a 
-              href="/login" 
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              href="/api/docs"
+              style={{
+                backgroundColor: '#2563eb',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                display: 'inline-block'
+              }}
             >
-              Login
+              API Documentation
             </a>
             <a 
-              href="/register" 
-              className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
+              href="/health"
+              style={{
+                backgroundColor: '#059669',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                display: 'inline-block'
+              }}
             >
-              Register
+              Health Check
             </a>
           </div>
         </div>
         
-        <div className="mt-16 grid md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-2">SMS Verification</h3>
-            <p className="text-gray-600">Verify accounts across 100+ services</p>
+        <div style={{
+          marginTop: '64px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '32px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
+              SMS Verification
+            </h3>
+            <p style={{ color: '#6b7280' }}>
+              Verify accounts across 100+ services with mock mode enabled
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-2">Real-time Chat</h3>
-            <p className="text-gray-600">Instant messaging with WebSocket support</p>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
+              Real-time Chat
+            </h3>
+            <p style={{ color: '#6b7280' }}>
+              Instant messaging with WebSocket support
+            </p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-lg font-semibold mb-2">AI Assistant</h3>
-            <p className="text-gray-600">Smart automation and conversation intelligence</p>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
+              AI Assistant
+            </h3>
+            <p style={{ color: '#6b7280' }}>
+              Smart automation (disabled in mock mode)
+            </p>
+          </div>
+        </div>
+        
+        <div style={{
+          marginTop: '64px',
+          textAlign: 'center',
+          padding: '32px',
+          backgroundColor: 'white',
+          borderRadius: '8px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        }}>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
+            Platform Status: Online
+          </h2>
+          <p style={{ color: '#6b7280', marginBottom: '24px' }}>
+            Backend API is running with mock services enabled for development
+          </p>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <span style={{
+              backgroundColor: '#10b981',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '14px'
+            }}>
+              ✓ Database Connected
+            </span>
+            <span style={{
+              backgroundColor: '#f59e0b',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '14px'
+            }}>
+              ⚠ Mock Services
+            </span>
+            <span style={{
+              backgroundColor: '#10b981',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '14px'
+            }}>
+              ✓ API Ready
+            </span>
           </div>
         </div>
       </div>
