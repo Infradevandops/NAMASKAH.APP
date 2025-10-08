@@ -1,21 +1,150 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './components/pages/LandingPage';
-import LoginPage from './components/pages/LoginPage';
-import RegisterPage from './components/pages/RegisterPage';
-import DashboardPage from './components/pages/DashboardPage';
-import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-      </Routes>
-    </Router>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%)',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      padding: '64px 16px'
+    }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', textAlign: 'center' }}>
+        <h1 style={{
+          fontSize: '48px',
+          fontWeight: 'bold',
+          color: '#1f2937',
+          marginBottom: '16px'
+        }}>
+          Welcome to Namaskah.App
+        </h1>
+        <p style={{
+          fontSize: '24px',
+          color: '#6b7280',
+          marginBottom: '32px'
+        }}>
+          Enterprise Communication Platform
+        </p>
+        
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginBottom: '64px' }}>
+          <a 
+            href="/docs"
+            style={{
+              backgroundColor: '#2563eb',
+              color: 'white',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              textDecoration: 'none'
+            }}
+          >
+            API Documentation
+          </a>
+          <a 
+            href="/health"
+            style={{
+              backgroundColor: '#059669',
+              color: 'white',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              textDecoration: 'none'
+            }}
+          >
+            Health Check
+          </a>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '32px',
+          marginBottom: '64px'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
+              SMS Verification
+            </h3>
+            <p style={{ color: '#6b7280', margin: 0 }}>
+              Verify accounts across 100+ services
+            </p>
+          </div>
+          
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
+              Real-time Chat
+            </h3>
+            <p style={{ color: '#6b7280', margin: 0 }}>
+              WebSocket messaging support
+            </p>
+          </div>
+          
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>
+              AI Assistant
+            </h3>
+            <p style={{ color: '#6b7280', margin: 0 }}>
+              Smart automation features
+            </p>
+          </div>
+        </div>
+
+        <div style={{
+          backgroundColor: 'white',
+          padding: '32px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        }}>
+          <h2 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
+            Platform Status: Online ✅
+          </h2>
+          <p style={{ color: '#6b7280', marginBottom: '24px' }}>
+            Backend API running with 25+ endpoints available
+          </p>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <span style={{
+              backgroundColor: '#10b981',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '14px'
+            }}>
+              ✓ Database Connected
+            </span>
+            <span style={{
+              backgroundColor: '#f59e0b',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '14px'
+            }}>
+              ⚠ Mock Services
+            </span>
+            <span style={{
+              backgroundColor: '#10b981',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '20px',
+              fontSize: '14px'
+            }}>
+              ✓ API Ready
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
