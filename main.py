@@ -50,6 +50,8 @@ from api.webhook_api import router as webhook_router
 from api.google_oauth_api import router as google_oauth_router
 from api.auth_v2_api import router as auth_v2_router
 from api.email_verification_simple import router as email_verification_router
+from api.password_reset_api import router as password_reset_router
+from api.account_management_api import router as account_management_router
 from clients.unified_client import get_unified_client
 # Import core components
 from core.database import check_database_connection, create_tables
@@ -159,6 +161,8 @@ app.include_router(webhook_router, tags=["webhooks"])
 app.include_router(google_oauth_router, tags=["google_oauth"])
 app.include_router(auth_v2_router, tags=["auth_v2"])
 app.include_router(email_verification_router, tags=["email_verification"])
+app.include_router(password_reset_router, tags=["password_reset"])
+app.include_router(account_management_router, tags=["account_management"])
 
 
 # --- Health Check Endpoint (Define before catch-all) ---

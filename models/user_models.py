@@ -105,6 +105,7 @@ class User(Base):
     )
     subscriptions = relationship("UserSubscription", back_populates="user")
     email_tokens = relationship("EmailVerificationToken", back_populates="user")
+    password_reset_tokens = relationship("PasswordResetToken", back_populates="user")
 
     def __repr__(self):
         return f"<User(id='{self.id}', username='{self.username}', email='{self.email}', active={self.is_active})>"

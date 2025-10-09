@@ -114,5 +114,64 @@ class EmailService:
         # Save to file for development
         with open("verification_emails.log", "a") as f:
             f.write(f"{datetime.utcnow().isoformat()} | {email} | {verification_url}\n")
+    
+    async def send_password_reset_email(self, email: str, name: str, reset_token: str) -> bool:
+        """Send password reset email"""
+        try:
+            if self.email_provider == "sendgrid" and self.sendgrid_api_key:
+                await self._send_password_reset_sendgrid(email, name, reset_token)
+            else:
+                await self._send_password_reset_mock(email, name, reset_token)
+            return True
+        except Exception as e:
+            logger.error(f"Failed to send password reset email: {e}")
+            return False
+    
+    async def _send_password_reset_sendgrid(self, email: str, name: str, reset_token: str):
+        """Send password reset email via SendGrid"""
+        try:
+            import sendgrid
+            from sendgrid.helpers.mail import Mail
+            
+            sg = sendgrid.SendGridAPIClient(api_key=self.sendgrid_api_key)
+            
+            reset_url = f"{os.getenv('FRONTEND_URL', 'http://localhost:3000')}/reset-password?token={reset_token}"
+            
+            message = Mail(
+                from_email=self.from_email,
+                to_emails=email,
+                subject="Password Reset - Namaskah.App",
+                html_content=f"""
+                <h2>Password Reset Request</h2>
+                <p>Hi {name},</p>
+                <p>You requested to reset your password. Click the link below to set a new password:</p>
+                <a href="{reset_url}" style="background: #dc3545; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+                <p>Or copy this link: {reset_url}</p>
+                <p>This link expires in 24 hours.</p>
+                <p>If you didn't request this reset, please ignore this email.</p>
+                """
+            )
+            
+            response = sg.send(message)
+            logger.info(f"Password reset email sent to {email}: {response.status_code}")
+            
+        except Exception as e:
+            logger.error(f"SendGrid password reset email failed: {e}")
+            await self._send_password_reset_mock(email, name, reset_token)
+    
+    async def _send_password_reset_mock(self, email: str, name: str, reset_token: str):
+        """Mock password reset email for development"""
+        reset_url = f"http://localhost:8000/reset-password?token={reset_token}"
+        
+        logger.info(f"""
+        🔐 MOCK PASSWORD RESET EMAIL SENT TO: {email}
+        👤 Name: {name}
+        🔗 Reset URL: {reset_url}
+        ⏰ Expires: 24 hours
+        """)
+        
+        # Save to file for development
+        with open("password_reset_emails.log", "a") as f:
+            f.write(f"{datetime.utcnow().isoformat()} | {email} | {name} | {reset_url}\n")
 
 email_service = EmailService()
