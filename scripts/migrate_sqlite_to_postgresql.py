@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SQLite to PostgreSQL Migration Script for CumApp
+SQLite to PostgreSQL Migration Script for namaskah
 Safely migrates data from SQLite development database to PostgreSQL production
 """
 import os

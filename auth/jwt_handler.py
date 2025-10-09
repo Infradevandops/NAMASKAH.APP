@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-JWT Handler for CumApp Platform
+JWT Handler for namaskah Platform
 Handles JWT token creation and validation
 """
 import os

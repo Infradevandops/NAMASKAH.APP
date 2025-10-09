@@ -24,7 +24,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=cumapp_dev
+      - POSTGRES_DB=Namaskah.App_dev
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=dev_password
 

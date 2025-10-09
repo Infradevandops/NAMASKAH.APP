@@ -151,7 +151,7 @@ module.exports = {
       usePathForSuiteName: true
     }],
     ['jest-html-reporter', {
-      pageTitle: 'CumApp Frontend Test Report',
+      pageTitle: 'namaskah Frontend Test Report',
       outputPath: '<rootDir>/test-results/test-report.html'
     }]
   ],

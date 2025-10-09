@@ -1,5 +1,5 @@
 """
-Configuration management for CumApp
+Configuration management for namaskah
 """
 
 import os
@@ -10,7 +10,7 @@ class Config:
     """Base configuration class"""
     
     # Application
-    APP_NAME = os.getenv('APP_NAME', 'CumApp')
+    APP_NAME = os.getenv('APP_NAME', 'namaskah')
     DEBUG = os.getenv('DEBUG', 'false').lower() == 'true'
     PORT = int(os.getenv('PORT', 8000))
     LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')

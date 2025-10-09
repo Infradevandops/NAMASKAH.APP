@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced Verification API Endpoints for CumApp Communication Platform
+Enhanced Verification API Endpoints for namaskah Communication Platform
 Provides comprehensive REST API for verification management with integrated services,
 smart routing, and advanced features
 """

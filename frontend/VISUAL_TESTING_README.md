@@ -1,6 +1,6 @@
 # Visual Testing Guide
 
-This guide explains how to use the automated visual regression testing setup for the CumApp frontend.
+This guide explains how to use the automated visual regression testing setup for the namaskah frontend.
 
 ## Overview
 

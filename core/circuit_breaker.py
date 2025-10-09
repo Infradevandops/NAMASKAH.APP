@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Circuit Breaker Pattern Implementation for CumApp Communication Platform
+Circuit Breaker Pattern Implementation for namaskah Communication Platform
 Provides fault tolerance and prevents cascading failures in external API calls
 """
 import asyncio

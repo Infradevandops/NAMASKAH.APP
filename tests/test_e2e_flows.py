@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-End-to-End Tests for CumApp Workflows
+End-to-End Tests for namaskah Workflows
 Tests complete user journeys using Playwright for browser automation
 Requires: pytest-playwright installed (pip install pytest-playwright)
 Run with: pytest tests/test_e2e_flows.py --headed (for visual debugging)

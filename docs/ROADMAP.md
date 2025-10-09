@@ -1,8 +1,8 @@
-# 🗺️ CumApp Development Roadmap
+# 🗺️ namaskah Development Roadmap
 
 ## 🎯 **Vision Statement**
 
-Transform CumApp into the leading micro-SaaS platform for SMS verification and communication, serving developers, businesses, and individuals with enterprise-grade reliability and AI-powered features.
+Transform namaskah into the leading micro-SaaS platform for SMS verification and communication, serving developers, businesses, and individuals with enterprise-grade reliability and AI-powered features.
 
 ---
 

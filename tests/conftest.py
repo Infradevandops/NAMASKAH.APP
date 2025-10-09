@@ -27,11 +27,11 @@ os.environ["LOG_LEVEL"] = "ERROR"  # Reduce noise in tests
 os.environ["RATE_LIMIT_ENABLED"] = "false"  # Disable rate limiting in tests
 
 from main import app
-from core.database import Base, get_database_url, get_db
+from core.database import Base, get_db
 from models.user_models import User
-from models.verification_models import VerificationSession
+from models.verification_models import VerificationRequest
 from models.conversation_models import Conversation, Message
-from auth.security import get_password_hash, create_access_token
+from auth.security import hash_password, create_access_token
 
 
 @pytest.fixture(scope="session")
@@ -216,7 +216,7 @@ def sample_users(test_db):
             id=str(uuid.uuid4()),
             email=f"user{i}@example.com",
             full_name=f"User {i}",
-            hashed_password=get_password_hash("password123"),
+            hashed_password=hash_password("password123"),
             phone_number=f"+123456789{i}",
             is_verified=True
         )

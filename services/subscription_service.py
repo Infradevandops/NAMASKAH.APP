@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Subscription Management Service for CumApp Communication Platform
+Subscription Management Service for namaskah Communication Platform
 Handles subscription plans, pricing logic, purchase/renewal workflows, usage tracking, and billing integration
 """
 import logging
@@ -1245,7 +1245,7 @@ class SubscriptionService:
         story = []
 
         # Header
-        story.append(Paragraph("CumApp Invoice", title_style))
+        story.append(Paragraph("namaskah Invoice", title_style))
         story.append(Spacer(1, 12))
 
         # Invoice info table
@@ -1356,17 +1356,17 @@ class SubscriptionService:
             return False
 
         # Email content
-        subject = f"Payment Overdue - Your CumApp Subscription"
+        subject = f"Payment Overdue - Your namaskah Subscription"
         body = f"""
         Dear {user.email},
 
-        Your CumApp subscription is overdue by {days_overdue} days.
+        Your namaskah subscription is overdue by {days_overdue} days.
         Amount due: ${subscription['costs']['total_cost']:.2f}
 
         Please update your payment method or contact support.
 
         Best regards,
-        CumApp Team
+        namaskah Team
         """
 
         msg = MIMEMultipart()

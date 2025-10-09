@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SMS Service for CumApp Platform
+SMS Service for namaskah Platform
 Handles SMS sending and receiving functionality
 """
 import logging

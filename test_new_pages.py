@@ -22,7 +22,7 @@ def test_new_pages():
             
             if response.status_code == 200:
                 # Check if it contains React app content
-                if "CumApp" in response.text and ("About" in response.text or "Reviews" in response.text):
+                if "namaskah" in response.text and ("About" in response.text or "Reviews" in response.text):
                     print(f"✅ {page} - New page loaded successfully")
                 else:
                     print(f"⚠️  {page} - Loaded but content may not be correct")

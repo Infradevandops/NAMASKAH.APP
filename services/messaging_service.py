@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Messaging Service for CumApp Communication Platform
+Messaging Service for namaskah Communication Platform
 Handles both internal messaging and SMS to external numbers
 """
 import asyncio

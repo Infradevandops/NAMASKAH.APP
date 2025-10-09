@@ -15,7 +15,7 @@ const ReviewsPage = () => {
       rating: 5,
       date: "2024-01-15",
       title: "Game-changer for our verification workflow",
-      text: "CumApp reduced our SMS verification costs by 40% while improving delivery rates. The AI-powered features are incredible - it automatically handles customer queries and escalates complex issues. Setup took less than an hour.",
+      text: "namaskah reduced our SMS verification costs by 40% while improving delivery rates. The AI-powered features are incredible - it automatically handles customer queries and escalates complex issues. Setup took less than an hour.",
       avatar: "SC",
       verified: true,
       helpful: 24
@@ -28,7 +28,7 @@ const ReviewsPage = () => {
       rating: 5,
       date: "2024-01-10",
       title: "Best communication platform we've used",
-      text: "We migrated from Twilio + custom chat solution to CumApp. The unified platform saved us 6 months of development time. Real-time features work flawlessly, and the React components are beautiful.",
+      text: "We migrated from Twilio + custom chat solution to namaskah. The unified platform saved us 6 months of development time. Real-time features work flawlessly, and the React components are beautiful.",
       avatar: "MR",
       verified: true,
       helpful: 18
@@ -67,7 +67,7 @@ const ReviewsPage = () => {
       rating: 5,
       date: "2024-01-03",
       title: "Cost-effective and reliable",
-      text: "Switched from expensive enterprise solutions. CumApp delivers the same features at 60% lower cost. 99.9% uptime in 8 months of usage. The AI suggestions actually help our support team.",
+      text: "Switched from expensive enterprise solutions. namaskah delivers the same features at 60% lower cost. 99.9% uptime in 8 months of usage. The AI suggestions actually help our support team.",
       avatar: "LW",
       verified: true,
       helpful: 19
@@ -93,7 +93,7 @@ const ReviewsPage = () => {
       rating: 5,
       date: "2023-12-25",
       title: "Seamless integration experience",
-      text: "Integrated CumApp in just 2 days. The webhook system is robust and the real-time dashboard gives us great visibility. Customer support is responsive and knowledgeable.",
+      text: "Integrated namaskah in just 2 days. The webhook system is robust and the real-time dashboard gives us great visibility. Customer support is responsive and knowledgeable.",
       avatar: "MG",
       verified: true,
       helpful: 27
@@ -106,7 +106,7 @@ const ReviewsPage = () => {
       rating: 5,
       date: "2023-12-20",
       title: "Scales beautifully with our growth",
-      text: "Started with 1000 SMS/month, now processing 500K+. CumApp scaled seamlessly without any configuration changes. The pricing is transparent and the analytics help us optimize our flows.",
+      text: "Started with 1000 SMS/month, now processing 500K+. namaskah scaled seamlessly without any configuration changes. The pricing is transparent and the analytics help us optimize our flows.",
       avatar: "RK",
       verified: true,
       helpful: 33
@@ -162,7 +162,7 @@ const ReviewsPage = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link to="/" className="text-2xl font-bold text-blue-600">
-                CumApp
+                namaskah
               </Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
@@ -188,7 +188,7 @@ const ReviewsPage = () => {
               Customer Reviews
             </Typography>
             <Typography variant="body" className="text-xl mb-8 text-blue-100">
-              See what our customers say about CumApp. Real reviews from real developers and businesses.
+              See what our customers say about namaskah. Real reviews from real developers and businesses.
             </Typography>
             
             {/* Trustpilot-style rating display */}
@@ -349,7 +349,7 @@ const ReviewsPage = () => {
             Join Our Happy Customers
           </Typography>
           <Typography className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
-            Start your free trial today and see why developers love CumApp.
+            Start your free trial today and see why developers love namaskah.
           </Typography>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -373,7 +373,7 @@ const ReviewsPage = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <Link to="/" className="text-2xl font-bold text-white">
-                CumApp
+                namaskah
               </Link>
               <Typography className="text-gray-400 mt-2">
                 Enterprise communication platform
@@ -388,7 +388,7 @@ const ReviewsPage = () => {
           </div>
           <div className="border-t border-gray-700 mt-6 pt-6 text-center">
             <Typography className="text-gray-400">
-              © 2024 CumApp. All rights reserved.
+              © 2024 namaskah. All rights reserved.
             </Typography>
           </div>
         </div>

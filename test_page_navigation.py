@@ -33,7 +33,7 @@ def test_page_navigation():
         ]
     }
     
-    print("🧪 Testing CumApp Page Navigation...")
+    print("🧪 Testing namaskah Page Navigation...")
     print("=" * 50)
     
     # Test public routes
@@ -45,7 +45,7 @@ def test_page_navigation():
             
             if response.status_code == 200:
                 # Check if it's serving React app
-                if "CumApp" in response.text or "react" in response.text.lower():
+                if "namaskah" in response.text or "react" in response.text.lower():
                     print(f"✅ {route} - React app loaded")
                 else:
                     print(f"⚠️  {route} - Loaded but may not be React app")

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unified startup script for CumApp - handles both frontend and backend
+Unified startup script for namaskah - handles both frontend and backend
 """
 import os
 import sys
@@ -10,7 +10,7 @@ import signal
 import threading
 from pathlib import Path
 
-class CumAppStarter:
+class Namaskah.AppStarter:
     def __init__(self):
         self.project_root = Path(__file__).parent
         self.frontend_path = self.project_root / "frontend"
@@ -183,7 +183,7 @@ class CumAppStarter:
     def show_info(self):
         """Show application information"""
         self.log("=" * 50, "")
-        self.log("🎉 CumApp Started Successfully!", "")
+        self.log("🎉 namaskah Started Successfully!", "")
         self.log("=" * 50, "")
         self.log("Backend API: http://localhost:8000", "🔧")
         self.log("API Docs: http://localhost:8000/docs", "📖")
@@ -202,7 +202,7 @@ class CumAppStarter:
     
     def start(self):
         """Start the complete application"""
-        self.log("Starting CumApp...", "🚀")
+        self.log("Starting namaskah...", "🚀")
         
         # Setup signal handlers
         self.setup_signal_handlers()
@@ -251,7 +251,7 @@ class CumAppStarter:
 
 def main():
     """Main function"""
-    starter = CumAppStarter()
+    starter = Namaskah.AppStarter()
     
     try:
         success = starter.start()

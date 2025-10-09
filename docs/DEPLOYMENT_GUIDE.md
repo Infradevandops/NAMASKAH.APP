@@ -1,15 +1,15 @@
-# 🚀 CumApp Deployment Guide
+# 🚀 namaskah Deployment Guide
 
 ## 🎯 **Deployment Overview**
 
-CumApp supports multiple deployment strategies from local development to enterprise-scale production. This guide covers all deployment options with step-by-step instructions.
+namaskah supports multiple deployment strategies from local development to enterprise-scale production. This guide covers all deployment options with step-by-step instructions.
 
 ## 🐳 **Docker Quick Start (Recommended)**
 
 ```bash
 # Clone and start with Docker
 git clone <repository-url>
-cd CumApp
+cd namaskah
 ./docker-dev.sh dev
 ```
 
@@ -17,7 +17,7 @@ cd CumApp
 
 **Environment Variables for Render:**
 ```
-JWT_SECRET_KEY = CumApp2024SecureJWTKeyForProductionUse32Chars
+JWT_SECRET_KEY = Namaskah.App2024SecureJWTKeyForProductionUse32Chars
 PORT = 10000
 DEBUG = false
 TEXTVERIFIED_API_KEY = your_textverified_api_key_here
@@ -27,7 +27,7 @@ GROQ_API_KEY = your_groq_api_key_here
 
 **Setup Steps:**
 1. Create Web Service on Render
-2. Connect GitHub repo: `https://github.com/Infradevandops/CUMAPP`
+2. Connect GitHub repo: `https://github.com/Infradevandops/namaskah`
 3. Build Command: `pip install -r requirements.txt`
 4. Start Command: `uvicorn main:app --host=0.0.0.0 --port=10000`
 5. Add environment variables above
@@ -41,7 +41,7 @@ GROQ_API_KEY = your_groq_api_key_here
 ```bash
 # Clone and setup
 git clone <repository-url>
-cd CumApp
+cd namaskah
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
@@ -74,7 +74,7 @@ nano .env
 **Required Environment Variables:**
 ```env
 # Database
-DATABASE_URL=sqlite:///./cumapp.db
+DATABASE_URL=sqlite:///./namaskah.db
 
 # Security
 JWT_SECRET_KEY=your-secret-key-here
@@ -146,14 +146,14 @@ restartPolicyType = "on_failure"
 # render.yaml
 services:
   - type: web
-    name: cumapp
+    name: namaskah
     env: python
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     
   - type: pserv
-    name: cumapp-db
+    name: namaskah-db
     env: postgresql
     plan: starter
 ```
@@ -203,15 +203,15 @@ release: alembic upgrade head
 ### **Production Docker Setup**
 ```bash
 # Build production image
-docker build -t cumapp:latest .
+docker build -t namaskah:latest .
 
 # Run with production config
 docker run -d \
-  --name cumapp \
+  --name namaskah \
   -p 80:8000 \
   -e DATABASE_URL=postgresql://user:pass@host:5432/db \
   -e JWT_SECRET_KEY=your-secret-key \
-  cumapp:latest
+  namaskah:latest
 ```
 
 ### **Docker Compose Production**
@@ -225,7 +225,7 @@ services:
     ports:
       - "80:8000"
     environment:
-      - DATABASE_URL=postgresql://cumapp:password@db:5432/cumapp
+      - DATABASE_URL=postgresql://namaskah:password@db:5432/namaskah
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     depends_on:
       - db
@@ -235,8 +235,8 @@ services:
   db:
     image: postgres:15
     environment:
-      - POSTGRES_DB=cumapp
-      - POSTGRES_USER=cumapp
+      - POSTGRES_DB=namaskah
+      - POSTGRES_USER=namaskah
       - POSTGRES_PASSWORD=password
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -267,32 +267,32 @@ volumes:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cumapp
+  name: namaskah
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: cumapp
+      app: namaskah
   template:
     metadata:
       labels:
-        app: cumapp
+        app: namaskah
     spec:
       containers:
-      - name: cumapp
-        image: cumapp:latest
+      - name: namaskah
+        image: namaskah:latest
         ports:
         - containerPort: 8000
         env:
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
-              name: cumapp-secrets
+              name: namaskah-secrets
               key: database-url
         - name: JWT_SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: cumapp-secrets
+              name: namaskah-secrets
               key: jwt-secret
 ```
 
@@ -310,7 +310,7 @@ LOG_LEVEL=INFO
 CORS_ORIGINS=https://yourdomain.com
 
 # Database
-DATABASE_URL=postgresql://user:password@host:5432/cumapp
+DATABASE_URL=postgresql://user:password@host:5432/namaskah
 
 # Security
 JWT_SECRET_KEY=your-very-secure-secret-key
@@ -398,7 +398,7 @@ curl https://yourdomain.com/health
 docker-compose logs -f app
 
 # Database monitoring
-docker-compose exec db psql -U cumapp -c "SELECT * FROM pg_stat_activity;"
+docker-compose exec db psql -U namaskah -c "SELECT * FROM pg_stat_activity;"
 ```
 
 ### **Performance Monitoring**
@@ -450,7 +450,7 @@ curl -X POST https://yourdomain.com/api/test/groq
 docker stats
 
 # Monitor database queries
-docker-compose exec db psql -U cumapp -c "
+docker-compose exec db psql -U namaskah -c "
 SELECT query, calls, total_time, mean_time 
 FROM pg_stat_statements 
 ORDER BY total_time DESC 
@@ -462,7 +462,7 @@ LIMIT 10;
 ```bash
 # Rollback to previous version
 docker-compose down
-docker pull cumapp:previous-version
+docker pull namaskah:previous-version
 docker-compose up -d
 
 # Database rollback
@@ -511,7 +511,7 @@ alembic downgrade -1
 
 ---
 
-**🚀 Your CumApp platform is now ready for production deployment!**
+**🚀 Your namaskah platform is now ready for production deployment!**
 
 Choose your preferred deployment method and follow the step-by-step instructions above. For additional support, check the troubleshooting section or create an issue in the repository.
 

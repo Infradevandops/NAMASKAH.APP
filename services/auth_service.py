@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Authentication Service for CumApp Platform
+Authentication Service for namaskah Platform
 """
 import logging
 import uuid

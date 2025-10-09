@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Production deployment script for CumApp.
+Production deployment script for namaskah.
 Handles environment setup, health checks, and deployment verification.
 """
 import os
@@ -374,7 +374,7 @@ def main():
     """Main deployment function."""
     import argparse
     
-    parser = argparse.ArgumentParser(description="Deploy CumApp")
+    parser = argparse.ArgumentParser(description="Deploy namaskah")
     parser.add_argument(
         "--environment", 
         choices=["development", "production"], 

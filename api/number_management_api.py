@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Number Management API Endpoints for CumApp Communication Platform
+Number Management API Endpoints for namaskah Communication Platform
 Provides comprehensive phone number search, purchase, and management.
 This is the unified API for all phone number operations.
 """

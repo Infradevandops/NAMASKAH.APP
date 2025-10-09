@@ -61,7 +61,7 @@ def setup_database_url():
 
 def main():
     """Main startup function."""
-    logger.info("🚀 Starting CumApp in production mode...")
+    logger.info("🚀 Starting namaskah in production mode...")
     
     # Set default environment variables
     set_default_env_vars()

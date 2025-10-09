@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Git setup script for CUMAPP
+# Git setup script for namaskah
 # This script initializes the git repository and prepares it for pushing to GitHub
 
 set -e
@@ -35,9 +35,9 @@ if ! command -v git &> /dev/null; then
 fi
 
 # Repository URL
-REPO_URL="https://github.com/Infradevandops/CUMAPP.git"
+REPO_URL="https://github.com/Infradevandops/namaskah.git"
 
-print_status "Setting up Git repository for CUMAPP..."
+print_status "Setting up Git repository for namaskah..."
 
 # Initialize git repository if not already initialized
 if [ ! -d ".git" ]; then
@@ -83,7 +83,7 @@ else
     
     # Check if this is the first commit
     if ! git rev-parse --verify HEAD &> /dev/null; then
-        commit_message="Initial commit: CUMAPP communication platform
+        commit_message="Initial commit: namaskah communication platform
 
 - FastAPI application with Twilio, TextVerified, and Groq integration
 - Docker containerization with multi-service setup
@@ -93,7 +93,7 @@ else
 - Complete CI/CD pipeline with GitHub Actions
 - Documentation and development tools"
     else
-        commit_message="Update: Latest changes to CUMAPP
+        commit_message="Update: Latest changes to namaskah
 
 - Updated application code and configuration
 - Enhanced documentation and setup scripts

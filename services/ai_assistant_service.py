@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AI Assistant Service for CumApp Communication Platform
+AI Assistant Service for namaskah Communication Platform
 Provides local language model integration for privacy-focused processing,
 conversation context management, and response suggestion algorithms
 """

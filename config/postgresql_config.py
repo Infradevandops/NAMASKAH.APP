@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PostgreSQL Configuration for CumApp
+PostgreSQL Configuration for namaskah
 Production-ready database configuration with connection pooling and optimization
 """
 import os
@@ -31,8 +31,8 @@ class PostgreSQLConfig:
             # Construct from individual components
             host = os.getenv("POSTGRES_HOST", "localhost")
             port = os.getenv("POSTGRES_PORT", "5432")
-            database = os.getenv("POSTGRES_DB", "cumapp_production")
-            username = os.getenv("POSTGRES_USER", "cumapp_user")
+            database = os.getenv("POSTGRES_DB", "Namaskah.App_production")
+            username = os.getenv("POSTGRES_USER", "Namaskah.App_user")
             password = os.getenv("POSTGRES_PASSWORD")
             
             if not password:
@@ -67,7 +67,7 @@ class PostgreSQLConfig:
                 "connect_timeout": int(os.getenv("DB_CONNECT_TIMEOUT", "30")),
                 "command_timeout": int(os.getenv("DB_COMMAND_TIMEOUT", "60")),
                 "server_settings": {
-                    "application_name": "cumapp",
+                    "application_name": "namaskah",
                     "jit": "off",  # Disable JIT for better performance on small queries
                 }
             }

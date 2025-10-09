@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Communication Service for CumApp Communication Platform
+Communication Service for namaskah Communication Platform
 Provides comprehensive SMS and voice communication with smart routing, history management,
 call recording, forwarding, and user number management dashboard
 """

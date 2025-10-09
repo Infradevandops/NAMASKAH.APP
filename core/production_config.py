@@ -129,7 +129,7 @@ class ProductionConfig:
         return {
             "level": os.getenv("LOG_LEVEL", "INFO"),
             "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-            "file_path": os.getenv("LOG_FILE_PATH", "/var/log/cumapp/app.log"),
+            "file_path": os.getenv("LOG_FILE_PATH", "/var/log/namaskah/app.log"),
             "max_bytes": int(os.getenv("LOG_MAX_BYTES", "10485760")),  # 10MB
             "backup_count": int(os.getenv("LOG_BACKUP_COUNT", "5")),
         }

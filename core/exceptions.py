@@ -432,7 +432,7 @@ def map_http_error(status_code: int, message: str, service_name: str = "unknown"
 
 
 def map_twilio_error(twilio_exception) -> TwilioError:
-    """Map Twilio exception to appropriate CumApp exception"""
+    """Map Twilio exception to appropriate namaskah exception"""
     try:
         # Handle Twilio REST exceptions
         if hasattr(twilio_exception, 'status'):

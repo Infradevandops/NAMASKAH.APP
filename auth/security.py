@@ -96,7 +96,7 @@ def generate_api_key() -> str:
     """
     Generate a secure API key
     """
-    return f"cumapp_{secrets.token_urlsafe(32)}"
+    return f"Namaskah.App_{secrets.token_urlsafe(32)}"
 
 
 def hash_api_key(api_key: str) -> str:

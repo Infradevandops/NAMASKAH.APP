@@ -87,6 +87,9 @@ class User(Base):
     # Password reset
     password_reset_token = Column(String(255))
     password_reset_expires = Column(DateTime(timezone=True))
+    
+    # Email verification timestamp
+    email_verified_at = Column(DateTime(timezone=True))
 
     # Relationships
     owned_numbers = relationship("PhoneNumber", back_populates="owner")
@@ -101,6 +104,7 @@ class User(Base):
         "UserNumber", back_populates="user", cascade="all, delete-orphan"
     )
     subscriptions = relationship("UserSubscription", back_populates="user")
+    email_tokens = relationship("EmailVerificationToken", back_populates="user")
 
     def __repr__(self):
         return f"<User(id='{self.id}', username='{self.username}', email='{self.email}', active={self.is_active})>"

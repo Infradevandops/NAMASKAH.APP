@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database Cleanup and Maintenance Script for CumApp Communication Platform
+Database Cleanup and Maintenance Script for namaskah Communication Platform
 Handles data retention, archiving, and cleanup operations
 """
 import asyncio

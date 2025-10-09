@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced Twilio Client for CumApp Communication Platform
+Enhanced Twilio Client for namaskah Communication Platform
 Provides advanced SMS, voice, and number management capabilities
 """
 import logging

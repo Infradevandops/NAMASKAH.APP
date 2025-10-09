@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Integrated Verification Service for CumApp Communication Platform
+Integrated Verification Service for namaskah Communication Platform
 Combines TextVerified integration, user management, and smart routing for complete verification workflow
 """
 import asyncio

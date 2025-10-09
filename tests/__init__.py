@@ -1,1 +1,1 @@
-# Tests package for CumApp
+# Tests package for namaskah

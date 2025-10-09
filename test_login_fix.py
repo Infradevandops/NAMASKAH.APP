@@ -44,7 +44,7 @@ def test_login():
         print("   ✅ Login page loaded")
         
         # Fill in credentials
-        email_input.send_keys("demo@cumapp.com")
+        email_input.send_keys("demo@namaskah.com")
         
         password_input = driver.find_element(By.NAME, "password")
         password_input.send_keys("demo123")
@@ -105,7 +105,7 @@ def main():
     if success:
         print("🎉 Login test PASSED!")
         print("\n✅ You can now login with:")
-        print("   Email: demo@cumapp.com")
+        print("   Email: demo@namaskah.com")
         print("   Password: demo123")
         print("\n🌐 Go to: http://localhost:8000/login")
     else:

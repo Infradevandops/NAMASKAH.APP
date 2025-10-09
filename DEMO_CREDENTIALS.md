@@ -1,4 +1,4 @@
-# 🔐 CumApp Demo Credentials & Authentication Guide
+# 🔐 namaskah Demo Credentials & Authentication Guide
 
 ## 🚀 **Quick Start - Demo Login**
 
@@ -17,10 +17,10 @@
 **Any email/password combination works! Try these:**
 
 ```
-Email: demo@cumapp.com
+Email: demo@namaskah.com
 Password: demo123
 
-Email: admin@cumapp.com  
+Email: admin@namaskah.com  
 Password: admin123
 
 Email: test@example.com
@@ -31,22 +31,22 @@ Password: password
 - Frontend accepts any valid email format
 - Password must be 6+ characters
 - Automatically logs you in and redirects to dashboard
-- User data is simulated (John Doe, demo@cumapp.com)
+- User data is simulated (John Doe, demo@namaskah.com)
 
 ### **Option 2: Real Demo Users (Can be implemented)**
 
 If you need real authentication, I can quickly set up:
 
 ```
-Email: demo@cumapp.com
+Email: demo@namaskah.com
 Password: DemoUser123!
 Role: Standard User
 
-Email: admin@cumapp.com
+Email: admin@namaskah.com
 Password: AdminUser123!
 Role: Administrator
 
-Email: test@cumapp.com
+Email: test@namaskah.com
 Password: TestUser123!
 Role: Test User
 ```
@@ -72,7 +72,7 @@ cd frontend && npm start
 ### **3. Login Process**
 1. Go to http://localhost:8000
 2. Click "Login" or "Get Started"
-3. Enter any email (e.g., `demo@cumapp.com`)
+3. Enter any email (e.g., `demo@namaskah.com`)
 4. Enter any password 6+ chars (e.g., `demo123`)
 5. Click "Sign in"
 6. You'll be redirected to the dashboard
@@ -150,7 +150,7 @@ POST /api/auth/refresh
 ### **For Rich Text Editor Development**
 **Use Mock Authentication** - It's perfect for testing new features:
 
-1. **Quick Login**: `demo@cumapp.com` / `demo123`
+1. **Quick Login**: `demo@namaskah.com` / `demo123`
 2. **Access Chat**: Navigate to chat page
 3. **Test Features**: Rich text editor, emoji picker, file uploads
 4. **No Setup Required**: Works immediately
@@ -203,4 +203,4 @@ curl http://localhost:8000/health
 
 ---
 
-**🎉 Ready to test! Use `demo@cumapp.com` / `demo123` and start exploring the Rich Text Editor features!**
+**🎉 Ready to test! Use `demo@namaskah.com` / `demo123` and start exploring the Rich Text Editor features!**

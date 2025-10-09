@@ -10,7 +10,7 @@
     "message": "All configurations checked",
     "data": {
       "App Settings": {
-        "APP_NAME": "CUMAPP",
+        "APP_NAME": "namaskah",
         "PORT": "8000",
         "DEBUG": "True"
       },

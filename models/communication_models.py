@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Communication Models for CumApp Communication Platform
+Communication Models for namaskah Communication Platform
 Enhanced models for SMS, voice, and communication management
 """
 import enum

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides comprehensive documentation for all CumApp frontend components, including their props, usage examples, and best practices. All components follow consistent patterns and are built with accessibility, performance, and developer experience in mind.
+This document provides comprehensive documentation for all namaskah frontend components, including their props, usage examples, and best practices. All components follow consistent patterns and are built with accessibility, performance, and developer experience in mind.
 
 ## Atomic Components
 
@@ -765,4 +765,4 @@ function ContactForm() {
 }
 ```
 
-This comprehensive API reference provides everything developers need to effectively use CumApp components. For more examples and interactive documentation, refer to the Storybook stories at `/storybook`.
+This comprehensive API reference provides everything developers need to effectively use namaskah components. For more examples and interactive documentation, refer to the Storybook stories at `/storybook`.

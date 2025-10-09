@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Authentication API endpoints for CumApp Platform
+Authentication API endpoints for namaskah Platform
 """
 import logging
 from typing import Optional
@@ -291,7 +291,7 @@ async def get_current_user_info():
         # This should be replaced with proper token validation
         return {
             "id": "admin-001",
-            "email": "admin@cumapp.com",
+            "email": "admin@namaskah.com",
             "username": "admin",
             "full_name": "Admin User",
             "role": "admin",

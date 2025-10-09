@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Simple startup script for CumApp
+Simple startup script for namaskah
 """
 import os
 import sys
 import subprocess
 
 def start_app():
-    """Start the CumApp server"""
-    print("🚀 Starting CumApp...")
+    """Start the namaskah server"""
+    print("🚀 Starting namaskah...")
     
     # Check if React build exists
     if not os.path.exists("frontend/build/index.html"):

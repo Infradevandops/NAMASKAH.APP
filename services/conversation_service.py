@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Conversation Management Service for CumApp Platform
+Conversation Management Service for namaskah Platform
 """
 import logging
 import uuid

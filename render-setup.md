@@ -6,7 +6,7 @@
 ```yaml
 services:
   - type: web
-    name: cumapp
+    name: namaskah
     env: python
     buildCommand: "pip install -r requirements.txt && cd frontend && npm install && npm run build"
     startCommand: "gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT"
@@ -18,19 +18,19 @@ services:
         generateValue: true
       - key: DATABASE_URL
         fromDatabase:
-          name: cumapp-db
+          name: namaskah-db
           property: connectionString
       - key: SENTRY_DSN
         value: "https://2ce37686e54217bc6539cce15a0b3a3b@o4510054773555200.ingest.de.sentry.io/4510054775717968"
 
 databases:
-  - name: cumapp-db
-    databaseName: cumapp
-    user: cumapp_user
+  - name: namaskah-db
+    databaseName: namaskah
+    user: Namaskah.App_user
 
 static:
   - type: static
-    name: cumapp-frontend
+    name: namaskah-frontend
     staticPublishPath: ./frontend/build
     buildCommand: "cd frontend && npm install && npm run build"
     routes:

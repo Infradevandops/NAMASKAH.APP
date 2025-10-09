@@ -88,7 +88,7 @@ def init_sentry():
         
         # Set user context if available
         with sentry_sdk.configure_scope() as scope:
-            scope.set_tag("service", "cumapp")
+            scope.set_tag("service", "namaskah")
             scope.set_tag("component", "backend")
             
         logger.info(f"✅ Sentry initialized successfully - Environment: {environment}")

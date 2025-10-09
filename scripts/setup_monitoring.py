@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Monitoring and observability setup script for CumApp enterprise platform.
+Monitoring and observability setup script for namaskah enterprise platform.
 Configures Sentry, performance monitoring, health checks, and logging.
 """
 import os

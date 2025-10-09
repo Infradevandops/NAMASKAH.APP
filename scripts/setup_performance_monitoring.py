@@ -123,7 +123,7 @@ CLS_BUDGET=0.1
 
 def main():
     """Main setup function."""
-    logger.info("🚀 Setting up Performance Monitoring for CumApp")
+    logger.info("🚀 Setting up Performance Monitoring for namaskah")
     logger.info("=" * 50)
 
     success_count = 0

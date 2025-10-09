@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced Billing Service for CumApp
+Enhanced Billing Service for namaskah
 Advanced billing features including prorated billing, usage monitoring, and forecasting
 """
 import logging

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AI Assistant API endpoints for CumApp Communication Platform
+AI Assistant API endpoints for namaskah Communication Platform
 Provides API endpoints for AI assistance, contextual help, and intent analysis
 """
 import asyncio

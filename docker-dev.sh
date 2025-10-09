@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# CUMAPP Docker Development Helper Script
+# namaskah Docker Development Helper Script
 
 set -e
 
@@ -52,7 +52,7 @@ build() {
 
 # Start services
 start() {
-    print_status "Starting CUMAPP services..."
+    print_status "Starting namaskah services..."
     docker-compose up -d
     print_success "Services started successfully"
     
@@ -65,14 +65,14 @@ start() {
 
 # Stop services
 stop() {
-    print_status "Stopping CUMAPP services..."
+    print_status "Stopping namaskah services..."
     docker-compose down
     print_success "Services stopped successfully"
 }
 
 # Restart services
 restart() {
-    print_status "Restarting CUMAPP services..."
+    print_status "Restarting namaskah services..."
     docker-compose restart
     print_success "Services restarted successfully"
 }
@@ -100,7 +100,7 @@ health_check() {
     fi
     
     # Check database
-    if docker-compose exec -T db pg_isready -U postgres -d cumapp_db > /dev/null 2>&1; then
+    if docker-compose exec -T db pg_isready -U postgres -d Namaskah.App_db > /dev/null 2>&1; then
         print_success "✓ Database is ready"
     else
         print_error "✗ Database is not ready"
@@ -166,19 +166,19 @@ exec_app() {
 # Database operations
 db_shell() {
     print_status "Opening database shell..."
-    docker-compose exec db psql -U postgres -d cumapp_db
+    docker-compose exec db psql -U postgres -d Namaskah.App_db
 }
 
 db_backup() {
     backup_file="backup_$(date +%Y%m%d_%H%M%S).sql"
     print_status "Creating database backup: $backup_file"
-    docker-compose exec -T db pg_dump -U postgres cumapp_db > "$backup_file"
+    docker-compose exec -T db pg_dump -U postgres Namaskah.App_db > "$backup_file"
     print_success "Database backup created: $backup_file"
 }
 
 # Show help
 show_help() {
-    echo "CUMAPP Docker Development Helper"
+    echo "namaskah Docker Development Helper"
     echo ""
     echo "Usage: $0 [COMMAND]"
     echo ""

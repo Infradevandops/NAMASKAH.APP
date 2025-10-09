@@ -1,4 +1,4 @@
-# 🔧 CumApp Troubleshooting Guide
+# 🔧 namaskah Troubleshooting Guide
 
 ## 🚨 Issue: localhost:8000 shows nothing
 
@@ -197,7 +197,7 @@ curl http://localhost:8000/health
 When working correctly, you should see:
 
 1. **Server starts** without errors
-2. **http://localhost:8000** shows React app (CumApp landing page)
+2. **http://localhost:8000** shows React app (namaskah landing page)
 3. **http://localhost:8000/docs** shows API documentation
 4. **http://localhost:8000/health** returns JSON health status
 5. **Browser console** shows no errors

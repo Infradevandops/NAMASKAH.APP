@@ -95,7 +95,7 @@ class TenantMiddleware(BaseHTTPMiddleware):
     def _extract_tenant_from_subdomain(self, request: Request) -> Optional[int]:
         """
         Extract tenant ID from subdomain
-        Format: {tenant-domain}.cumapp.com -> lookup tenant by domain
+        Format: {tenant-domain}.namaskah.com -> lookup tenant by domain
         """
         try:
             host = request.headers.get("host", "").lower()

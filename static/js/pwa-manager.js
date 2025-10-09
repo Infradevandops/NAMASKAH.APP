@@ -103,8 +103,8 @@ class PWAManager {
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         `;
         this.installButton.innerHTML = '<i class="fas fa-download"></i>';
-        this.installButton.title = 'Install CumApp';
-        this.installButton.setAttribute('aria-label', 'Install CumApp as an app');
+        this.installButton.title = 'Install namaskah';
+        this.installButton.setAttribute('aria-label', 'Install namaskah as an app');
 
         this.installButton.addEventListener('click', () => {
             this.installPWA();
@@ -155,7 +155,7 @@ class PWAManager {
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
                     <strong>Update Available</strong><br>
-                    <small>A new version of CumApp is ready to install.</small>
+                    <small>A new version of namaskah is ready to install.</small>
                 </div>
                 <div class="ms-2">
                     <button class="btn btn-sm btn-primary me-1" onclick="pwaManager.updateApp()">

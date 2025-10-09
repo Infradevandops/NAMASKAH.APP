@@ -164,7 +164,7 @@ def create_pwa_test_page():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PWA Test Page - CumApp</title>
+    <title>PWA Test Page - namaskah</title>
     <link rel="manifest" href="/static/manifest.json">
     <meta name="theme-color" content="#ef4444">
     <style>
@@ -204,7 +204,7 @@ def create_pwa_test_page():
     </style>
 </head>
 <body>
-    <h1>CumApp PWA Test Page</h1>
+    <h1>namaskah PWA Test Page</h1>
 
     <div class="test-section">
         <h2>Installation Status</h2>
@@ -345,7 +345,7 @@ def create_pwa_test_page():
 
 def main():
     """Main PWA setup function."""
-    logger.info("🚀 Setting up Progressive Web App features for CumApp")
+    logger.info("🚀 Setting up Progressive Web App features for namaskah")
     logger.info("=" * 60)
 
     success_count = 0

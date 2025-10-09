@@ -1,6 +1,6 @@
 {
-  "name": "CumApp - Professional SMS Verification Platform",
-  "short_name": "CumApp",
+  "name": "namaskah - Professional SMS Verification Platform",
+  "short_name": "namaskah",
   "description": "Comprehensive SMS and voice communication platform with AI assistance and offline capabilities",
   "start_url": "/",
   "display": "standalone",

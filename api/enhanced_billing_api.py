@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced Billing API for CumApp
+Enhanced Billing API for namaskah
 Comprehensive billing management with advanced features
 """
 import logging

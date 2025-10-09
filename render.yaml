@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: cumapp
+    name: namaskah
     env: python
     buildCommand: |
       echo "🔧 Installing Python dependencies..."
@@ -32,7 +32,7 @@ services:
         generateValue: true
       - key: DATABASE_URL
         fromDatabase:
-          name: cumapp-db
+          name: namaskah-db
           property: connectionString
       - key: SENTRY_DSN
         value: "https://2ce37686e54217bc6539cce15a0b3a3b@o4510054773555200.ingest.de.sentry.io/4510054775717968"
@@ -50,6 +50,6 @@ services:
         value: "true"
 
 databases:
-  - name: cumapp-db
-    databaseName: cumapp
-    user: cumapp_user
+  - name: namaskah-db
+    databaseName: namaskah
+    user: Namaskah.App_user

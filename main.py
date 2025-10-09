@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Main application file for the CumApp platform.
+Main application file for the namaskah platform.
 """
 import logging
 import os
@@ -49,6 +49,7 @@ from api.websocket_api import router as websocket_router
 from api.webhook_api import router as webhook_router
 from api.google_oauth_api import router as google_oauth_router
 from api.auth_v2_api import router as auth_v2_router
+from api.email_verification_simple import router as email_verification_router
 from clients.unified_client import get_unified_client
 # Import core components
 from core.database import check_database_connection, create_tables
@@ -157,6 +158,7 @@ app.include_router(websocket_router, tags=["websocket"])
 app.include_router(webhook_router, tags=["webhooks"])
 app.include_router(google_oauth_router, tags=["google_oauth"])
 app.include_router(auth_v2_router, tags=["auth_v2"])
+app.include_router(email_verification_router, tags=["email_verification"])
 
 
 # --- Health Check Endpoint (Define before catch-all) ---
@@ -166,7 +168,7 @@ async def test_sentry_error():
     import sentry_sdk
     
     # Capture a test message
-    sentry_sdk.capture_message("Test message from CumApp", level="info")
+    sentry_sdk.capture_message("Test message from namaskah", level="info")
     
     # Trigger a test error
     try:

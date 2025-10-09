@@ -148,7 +148,7 @@ const RegisterPage = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <Link to="/" className="flex justify-center mb-4">
-              <h1 className="text-3xl font-bold text-blue-600">CumApp</h1>
+              <h1 className="text-3xl font-bold text-blue-600">namaskah</h1>
             </Link>
             <div className="mx-auto h-12 w-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
               <Icon name="phone" className="text-white" size="lg" />
@@ -157,7 +157,7 @@ const RegisterPage = () => {
               Create your account
             </Typography>
             <Typography variant="body2" className="text-gray-600 mt-2">
-              Join CumApp and start communicating
+              Join namaskah and start communicating
             </Typography>
           </div>
 

@@ -212,7 +212,7 @@ self.addEventListener('push', event => {
     };
 
     event.waitUntil(
-      self.registration.showNotification(data.title || 'CumApp', options)
+      self.registration.showNotification(data.title || 'namaskah', options)
     );
   }
 });

@@ -1,5 +1,5 @@
 """
-CumApp Client Library
+namaskah Client Library
 Unified interface for all external service clients
 """
 

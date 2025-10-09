@@ -1,4 +1,4 @@
-// CumApp Design System Theme Configuration
+// namaskah Design System Theme Configuration
 
 export const theme = {
   colors: {

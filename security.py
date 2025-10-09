@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Security utilities for CumApp Platform
+Security utilities for namaskah Platform
 Handles input sanitization, CSRF protection, and security headers
 """
 import html

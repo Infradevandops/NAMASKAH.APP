@@ -326,7 +326,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         """
         Check rate limits before processing request
         """
-        client_ip = request.client.host
+        client_ip = request.client.host if request.client else "127.0.0.1"
         current_time = datetime.utcnow()
 
         # Clean old entries (simple cleanup)

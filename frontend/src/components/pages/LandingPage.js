@@ -9,7 +9,7 @@ const LandingPage = () => {
       role: "CTO at TechFlow Solutions",
       company: "TechFlow Solutions",
       rating: 5,
-      text: "CumApp reduced our SMS verification costs by 40% while improving delivery rates. The AI-powered features are incredible - it automatically handles customer queries and escalates complex issues. Setup took less than an hour.",
+      text: "namaskah reduced our SMS verification costs by 40% while improving delivery rates. The AI-powered features are incredible - it automatically handles customer queries and escalates complex issues. Setup took less than an hour.",
       avatar: "SC"
     },
     {
@@ -17,7 +17,7 @@ const LandingPage = () => {
       role: "Lead Developer at StartupHub",
       company: "StartupHub",
       rating: 5,
-      text: "We migrated from Twilio + custom chat solution to CumApp. The unified platform saved us 6 months of development time. Real-time features work flawlessly, and the React components are beautiful.",
+      text: "We migrated from Twilio + custom chat solution to namaskah. The unified platform saved us 6 months of development time. Real-time features work flawlessly, and the React components are beautiful.",
       avatar: "MR"
     },
     {
@@ -219,7 +219,7 @@ const LandingPage = () => {
               Trusted by Industry Leaders
             </Typography>
             <Typography className="text-xl text-gray-600">
-              See what our customers say about CumApp
+              See what our customers say about namaskah
             </Typography>
           </div>
           
@@ -261,7 +261,7 @@ const LandingPage = () => {
             Ready to Transform Your Communication?
           </Typography>
           <Typography className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
-            Join 500+ companies using CumApp for reliable, scalable communication infrastructure.
+            Join 500+ companies using namaskah for reliable, scalable communication infrastructure.
           </Typography>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">

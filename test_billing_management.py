@@ -39,7 +39,7 @@ def login_to_app(driver):
         )
         
         # Enter demo credentials
-        email_input.send_keys("demo@cumapp.com")
+        email_input.send_keys("demo@namaskah.com")
         
         password_input = driver.find_element(By.NAME, "password")
         password_input.send_keys("demo123")
@@ -467,7 +467,7 @@ def main():
         print("⚠️  Some tests encountered issues - check the output above")
     
     print(f"\n📍 How to Test Manually:")
-    print("   1. Login with: demo@cumapp.com / demo123")
+    print("   1. Login with: demo@namaskah.com / demo123")
     print("   2. Navigate to Billing page")
     print("   3. Test each tab: Overview, Plans, Payment, Invoices, Usage, Alerts")
     print("   4. Try plan upgrades and payment method management")

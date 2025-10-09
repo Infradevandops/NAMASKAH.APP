@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Messaging API for CumApp Platform
+Messaging API for namaskah Platform
 Handles SMS sending and receiving functionality
 """
 import logging

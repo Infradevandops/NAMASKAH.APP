@@ -1,9 +1,9 @@
 #!/bin/bash
-# CUMAPP Deployment Script
+# namaskah Deployment Script
 
 set -e
 
-echo "🚀 Starting CUMAPP deployment..."
+echo "🚀 Starting namaskah deployment..."
 
 # Check if running in production
 if [ "$NODE_ENV" = "production" ] || [ "$ENVIRONMENT" = "production" ]; then

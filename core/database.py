@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database configuration and session management for CumApp
+Database configuration and session management for namaskah
 Enhanced with PostgreSQL support and connection pooling
 """
 import logging

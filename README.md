@@ -259,7 +259,7 @@ Namaskah/
 ```bash
 # 1. Clone repository
 git clone <repository-url>
-cd cumapp
+cd namaskah
 
 # 2. Create virtual environment
 python -m venv .venv
@@ -614,7 +614,7 @@ cp .env.example .env.production
 
 # Update with production values
 JWT_SECRET_KEY=$(openssl rand -base64 32)
-DATABASE_URL=postgresql://user:pass@prod-db:5432/cumapp
+DATABASE_URL=postgresql://user:pass@prod-db:5432/namaskah
 REDIS_URL=redis://prod-redis:6379
 DEBUG=false
 ```
@@ -623,7 +623,7 @@ DEBUG=false
 
 ```bash
 # Build production image
-docker build -t cumapp:latest .
+docker build -t namaskah:latest .
 
 # Run with production compose
 docker-compose -f docker-compose.yml up -d
@@ -658,7 +658,7 @@ create_admin_user('admin@company.com', 'secure_password')
 ### 🔧 **Development Workflow**
 ```bash
 # 1. Fork and clone
-git clone https://github.com/yourusername/cumapp.git
+git clone https://github.com/yourusername/namaskah.git
 
 # 2. Create feature branch
 git checkout -b feature/amazing-feature
@@ -690,7 +690,7 @@ MIT License - see [LICENSE](LICENSE) file
 
 ### 🆘 **Support**
 - **Documentation**: `/docs` endpoint when running
-- **Issues**: [GitHub Issues](https://github.com/yourusername/cumapp/issues)
+- **Issues**: [GitHub Issues](https://github.com/yourusername/namaskah/issues)
 - **Security**: security@yourdomain.com
 - **Commercial**: enterprise@yourdomain.com
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database Management Utility for CumApp Communication Platform
+Database Management Utility for namaskah Communication Platform
 Handles migrations, indexing, optimization, and maintenance operations
 """
 import asyncio
@@ -315,7 +315,7 @@ class DatabaseManager:
                 "-U",
                 parsed.username or "postgres",
                 "-d",
-                parsed.path.lstrip("/") if parsed.path else "cumapp",
+                parsed.path.lstrip("/") if parsed.path else "namaskah",
                 "-f",
                 backup_path,
             ]
@@ -373,7 +373,7 @@ class DatabaseManager:
                 "-U",
                 parsed.username or "postgres",
                 "-d",
-                parsed.path.lstrip("/") if parsed.path else "cumapp",
+                parsed.path.lstrip("/") if parsed.path else "namaskah",
                 "-v",
                 backup_path,
             ]

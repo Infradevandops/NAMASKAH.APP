@@ -1,5 +1,5 @@
 """
-Unified Client Interface for CumApp
+Unified Client Interface for namaskah
 Provides a single interface for all external services with automatic fallback to mocks
 """
 

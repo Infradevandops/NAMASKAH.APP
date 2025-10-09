@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cumapp-v1';
+const CACHE_NAME = 'namaskah-v1';
 const urlsToCache = [
   '/',
   '/static/css/main.css',

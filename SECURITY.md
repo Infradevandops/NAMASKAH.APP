@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-We actively support the following versions of CumApp with security updates:
+We actively support the following versions of namaskah with security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -11,7 +11,7 @@ We actively support the following versions of CumApp with security updates:
 
 ## Reporting a Vulnerability
 
-We take security vulnerabilities seriously. If you discover a security vulnerability in CumApp, please follow these steps:
+We take security vulnerabilities seriously. If you discover a security vulnerability in namaskah, please follow these steps:
 
 ### 🚨 **DO NOT** create a public GitHub issue for security vulnerabilities
 
@@ -182,13 +182,13 @@ For general questions about this security policy:
 
 ## Acknowledgments
 
-We would like to thank the following security researchers who have helped improve CumApp's security:
+We would like to thank the following security researchers who have helped improve namaskah's security:
 
 - [Your name could be here - report a vulnerability!]
 
 ## Legal
 
-This security policy is subject to our [Terms of Service](https://github.com/Infradevandops/CumApp/blob/main/LICENSE) and applicable laws. We reserve the right to modify this policy at any time.
+This security policy is subject to our [Terms of Service](https://github.com/Infradevandops/namaskah/blob/main/LICENSE) and applicable laws. We reserve the right to modify this policy at any time.
 
 ---
 

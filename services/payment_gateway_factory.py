@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Payment Gateway Factory for CumApp
+Payment Gateway Factory for namaskah
 Manages multiple payment gateways with regional optimization and fallback support
 """
 import os

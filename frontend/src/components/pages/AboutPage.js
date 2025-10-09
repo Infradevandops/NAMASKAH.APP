@@ -72,7 +72,7 @@ const AboutPage = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link to="/" className="text-2xl font-bold text-blue-600">
-                CumApp
+                namaskah
               </Link>
             </div>
             <div className="hidden md:flex items-center space-x-8">
@@ -95,7 +95,7 @@ const AboutPage = () => {
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto text-center">
             <Typography variant="h1" className="text-5xl font-bold mb-6 leading-tight text-white">
-              About CumApp
+              About namaskah
             </Typography>
             <Typography variant="body" className="text-xl mb-8 text-blue-100">
               We're building the future of communication infrastructure. 
@@ -137,7 +137,7 @@ const AboutPage = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <Typography className="text-lg text-gray-700 mb-6">
-                  Founded in 2024, CumApp was born from the frustration of dealing with unreliable 
+                  Founded in 2024, namaskah was born from the frustration of dealing with unreliable 
                   SMS verification services and fragmented communication APIs. We saw developers 
                   struggling with multiple providers, inconsistent APIs, and poor reliability.
                 </Typography>
@@ -248,8 +248,8 @@ const AboutPage = () => {
             <div>
               <div className="text-3xl mb-3">📧</div>
               <Typography className="font-semibold mb-2 text-white">Email Us</Typography>
-              <Typography className="text-blue-100">hello@cumapp.com</Typography>
-              <Typography className="text-blue-100">support@cumapp.com</Typography>
+              <Typography className="text-blue-100">hello@namaskah.com</Typography>
+              <Typography className="text-blue-100">support@namaskah.com</Typography>
             </div>
             <div>
               <div className="text-3xl mb-3">💬</div>
@@ -286,7 +286,7 @@ const AboutPage = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <Link to="/" className="text-2xl font-bold text-white">
-                CumApp
+                namaskah
               </Link>
               <Typography className="text-gray-400 mt-2">
                 Enterprise communication platform
@@ -301,7 +301,7 @@ const AboutPage = () => {
           </div>
           <div className="border-t border-gray-700 mt-6 pt-6 text-center">
             <Typography className="text-gray-400">
-              © 2024 CumApp. All rights reserved.
+              © 2024 namaskah. All rights reserved.
             </Typography>
           </div>
         </div>

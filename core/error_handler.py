@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Comprehensive Error Handler for CumApp Communication Platform
+Comprehensive Error Handler for namaskah Communication Platform
 Combines retry logic, circuit breakers, and error reporting for robust error handling
 """
 import asyncio

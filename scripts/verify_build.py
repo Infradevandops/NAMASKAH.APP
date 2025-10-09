@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build verification script for CumApp deployment
+Build verification script for namaskah deployment
 """
 import os
 import sys
@@ -99,7 +99,7 @@ def verify_backend():
 
 def main():
     """Main verification function"""
-    print("🚀 CumApp Build Verification")
+    print("🚀 namaskah Build Verification")
     print("=" * 40)
     
     backend_ok = verify_backend()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Notification Service for CumApp Communication Platform
+Notification Service for namaskah Communication Platform
 Handles user notifications for various events
 """
 import logging

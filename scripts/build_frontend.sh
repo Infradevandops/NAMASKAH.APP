@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# 🚀 Frontend Build Script for CumApp
+# 🚀 Frontend Build Script for namaskah
 # This script builds the React frontend for production
 
 set -e  # Exit on any error
 
-echo "🚀 Building CumApp Frontend..."
+echo "🚀 Building namaskah Frontend..."
 
 # Check if we're in the right directory
 if [ ! -f "main.py" ]; then

@@ -35,7 +35,7 @@ async def get_users(limit: int = 50, offset: int = 0):
     users = [
         {
             "id": 1,
-            "email": "demo@cumapp.com",
+            "email": "demo@namaskah.com",
             "username": "demo",
             "credits": 25.50,
             "status": "active",

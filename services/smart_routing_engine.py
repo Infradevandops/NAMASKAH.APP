@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Smart Routing Engine for CumApp Communication Platform
+Smart Routing Engine for namaskah Communication Platform
 Provides intelligent number selection, cost optimization, and geographic routing
 """
 import logging

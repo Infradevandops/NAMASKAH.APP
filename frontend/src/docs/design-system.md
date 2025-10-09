@@ -1,8 +1,8 @@
-# CumApp Design System
+# namaskah Design System
 
 ## Overview
 
-The CumApp Design System provides a comprehensive set of design tokens, components, and guidelines to ensure consistent user experience across the application. This system is built on modern design principles and follows accessibility best practices.
+The namaskah Design System provides a comprehensive set of design tokens, components, and guidelines to ensure consistent user experience across the application. This system is built on modern design principles and follows accessibility best practices.
 
 ## Design Principles
 

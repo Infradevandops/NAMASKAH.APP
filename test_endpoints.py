@@ -9,7 +9,7 @@ def test_endpoints():
     """Test the main endpoints"""
     base_url = "http://localhost:8000"
     
-    print("🧪 Testing CumApp endpoints...")
+    print("🧪 Testing namaskah endpoints...")
     
     # Test health endpoint
     try:
@@ -26,7 +26,7 @@ def test_endpoints():
     try:
         response = requests.get(base_url, timeout=5)
         if response.status_code == 200:
-            if "CumApp" in response.text:
+            if "namaskah" in response.text:
                 print("✅ Root endpoint serving React app")
             else:
                 print("⚠️  Root endpoint working but content unexpected")

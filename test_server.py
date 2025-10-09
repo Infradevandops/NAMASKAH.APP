@@ -10,7 +10,7 @@ import os
 
 def test_server():
     """Test if the server starts and responds correctly"""
-    print("🚀 Testing CumApp Server...")
+    print("🚀 Testing namaskah Server...")
     
     # Check if React build exists
     if os.path.exists("frontend/build/index.html"):
@@ -48,7 +48,7 @@ def test_server():
         # Test root route
         try:
             response = requests.get(base_url, timeout=5)
-            if response.status_code == 200 and "CumApp" in response.text:
+            if response.status_code == 200 and "namaskah" in response.text:
                 print("✅ Root route working")
             else:
                 print(f"⚠️  Root route returned {response.status_code}")

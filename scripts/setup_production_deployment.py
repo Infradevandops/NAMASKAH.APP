@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Production deployment setup script for CumApp enterprise platform.
+Production deployment setup script for namaskah enterprise platform.
 Handles database setup, Redis configuration, monitoring, and deployment validation.
 """
 import os
@@ -29,7 +29,7 @@ class ProductionDeploymentSetup:
 
     def run_setup(self):
         """Run complete production setup."""
-        logger.info("🚀 Starting CumApp Enterprise Production Deployment Setup")
+        logger.info("🚀 Starting namaskah Enterprise Production Deployment Setup")
 
         steps = [
             self.validate_environment,
@@ -340,7 +340,7 @@ def main():
     try:
         setup = ProductionDeploymentSetup()
         setup.run_setup()
-        logger.info("🎉 CumApp Enterprise production deployment completed successfully!")
+        logger.info("🎉 namaskah Enterprise production deployment completed successfully!")
         return 0
     except Exception as e:
         logger.error(f"❌ Production deployment failed: {e}")

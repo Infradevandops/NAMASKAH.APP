@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Enhanced Communication API Endpoints for CumApp Communication Platform
+Enhanced Communication API Endpoints for namaskah Communication Platform
 Provides comprehensive SMS and voice communication with smart routing, webhook handling,
 conversation management, call features, and user dashboard
 """

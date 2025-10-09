@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Conversation API endpoints for CumApp Platform
+Conversation API endpoints for namaskah Platform
 """
 import logging
 from typing import List, Optional

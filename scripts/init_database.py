@@ -77,7 +77,7 @@ def create_default_users(db: Session):
 
 def main():
     """Initialize database"""
-    logger.info("🚀 Initializing CumApp Database...")
+    logger.info("🚀 Initializing namaskah Database...")
     
     # Check database connection
     if not check_database_connection():

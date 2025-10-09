@@ -6,8 +6,8 @@ import os
 import sys
 
 def diagnose():
-    """Run diagnostics on the CumApp setup"""
-    print("🔍 CumApp Diagnostics")
+    """Run diagnostics on the namaskah setup"""
+    print("🔍 namaskah Diagnostics")
     print("=" * 50)
     
     # Check Python version

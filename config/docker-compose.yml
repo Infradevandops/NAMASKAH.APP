@@ -4,12 +4,12 @@ services:
   # Main application
   app:
     build: .
-    container_name: cumapp-app
+    container_name: namaskah-app
     ports:
       - "8000:8000"
     environment:
       # Application settings
-      - APP_NAME=CUMAPP
+      - APP_NAME=namaskah
       - PORT=8000
       - DEBUG=False
       
@@ -23,7 +23,7 @@ services:
       - GROQ_MODEL=${GROQ_MODEL:-llama3-8b-8192}
       
       # Database and Redis URLs
-      - DATABASE_URL=postgresql://postgres:password@db:5432/cumapp_db
+      - DATABASE_URL=postgresql://postgres:password@db:5432/Namaskah.App_db
       - REDIS_URL=redis://redis:6379
       
       # Security settings
@@ -39,14 +39,14 @@ services:
       - ./templates:/app/templates
     restart: unless-stopped
     networks:
-      - cumapp-network
+      - namaskah-network
 
   # PostgreSQL database
   db:
     image: postgres:15-alpine
-    container_name: cumapp-db
+    container_name: namaskah-db
     environment:
-      - POSTGRES_DB=cumapp_db
+      - POSTGRES_DB=Namaskah.App_db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_INITDB_ARGS=--encoding=UTF-8
@@ -57,9 +57,9 @@ services:
       - "5432:5432"
     restart: unless-stopped
     networks:
-      - cumapp-network
+      - namaskah-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d cumapp_db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d Namaskah.App_db"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -67,7 +67,7 @@ services:
   # Redis for caching and session storage
   redis:
     image: redis:7-alpine
-    container_name: cumapp-redis
+    container_name: namaskah-redis
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis-password}
     volumes:
       - redis_data:/data
@@ -75,7 +75,7 @@ services:
       - "6379:6379"
     restart: unless-stopped
     networks:
-      - cumapp-network
+      - namaskah-network
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis-password}", "ping"]
       interval: 30s
@@ -85,7 +85,7 @@ services:
   # Nginx reverse proxy (optional, for production)
   nginx:
     image: nginx:alpine
-    container_name: cumapp-nginx
+    container_name: namaskah-nginx
     ports:
       - "80:80"
       - "443:443"
@@ -96,7 +96,7 @@ services:
       - app
     restart: unless-stopped
     networks:
-      - cumapp-network
+      - namaskah-network
     profiles:
       - production
 
@@ -109,5 +109,5 @@ volumes:
 
 # Custom network
 networks:
-  cumapp-network:
+  namaskah-network:
     driver: bridge
